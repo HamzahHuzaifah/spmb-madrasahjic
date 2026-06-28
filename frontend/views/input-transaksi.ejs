@@ -1,5 +1,5 @@
-
 <%- include('partials/header', { title: 'Input Transaksi Keuangan' , activePage: 'input-transaksi' }) %>
+<link rel="stylesheet" href="/css/input-transaksi.css?v=2">
 
     <div class="table-container">
         <div class="table-header">
@@ -38,10 +38,9 @@
 
                 <label style="display: block; margin-bottom: 8px; font-weight: 600;">Pilih Nama Pendaftar</label>
                 <select name="namaSantriBaru" id="namaPendaftar" class="form-control" style="width: 100%; margin-bottom: 15px;">
-    <option value="">-- Ketik Nama untuk Mencari --</option>
-</select>
-                <small style="color: var(--text-muted);">Data nama ini otomatis diambil dari form pendaftaran reguler
-                    (publik).</small>
+                    <option value="">-- Ketik Nama untuk Mencari --</option>
+                </select>
+                <small style="color: var(--text-muted);">Data nama ini otomatis diambil dari form pendaftaran reguler (publik).</small>
             </div>
 
             <!-- Section: Pembayaran Daftar Ulang -->
@@ -57,8 +56,8 @@
 
                 <label style="display: block; margin-bottom: 8px; font-weight: 600;">Nama Santri</label>
                 <select name="namaSantriDaftarUlang" id="namaSantriDaftarUlang" class="form-control" style="width: 100%;">
-    <option value="">-- Ketik Nama untuk Mencari --</option>
-</select>
+                    <option value="">-- Ketik Nama untuk Mencari --</option>
+                </select>
             </div>
 
             <!-- Section: Pemasukan / Pengeluaran Lain -->
@@ -147,11 +146,12 @@
             <label style="font-weight: 600;">Sampai Tanggal:</label>
             <input type="date" name="endDate" class="form-control filter-date" value="<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>">
 
-            <select name="pendidikan" class="form-control filter-select">
-                <option value="">Semua Pendidikan</option>
-                <option value="PAUDQu" <%= typeof pendidikanQuery !== 'undefined' && pendidikanQuery === 'PAUDQu' ? 'selected' : '' %>>PAUDQu</option>
-                <option value="TPQ" <%= typeof pendidikanQuery !== 'undefined' && pendidikanQuery === 'TPQ' ? 'selected' : '' %>>TPQ</option>
-                <option value="MDT" <%= typeof pendidikanQuery !== 'undefined' && pendidikanQuery === 'MDT' ? 'selected' : '' %>>MDT</option>
+            <select name="jenisTransaksi" class="form-control filter-select">
+                <option value="">Semua Jenis</option>
+                <option value="Pembayaran Pendaftaran Baru" <%= typeof jenisTransaksiQuery !== 'undefined' && jenisTransaksiQuery === 'Pembayaran Pendaftaran Baru' ? 'selected' : '' %>>Pendaftaran Baru</option>
+                <option value="Pembayaran Daftar Ulang" <%= typeof jenisTransaksiQuery !== 'undefined' && jenisTransaksiQuery === 'Pembayaran Daftar Ulang' ? 'selected' : '' %>>Daftar Ulang</option>
+                <option value="Pemasukan" <%= typeof jenisTransaksiQuery !== 'undefined' && jenisTransaksiQuery === 'Pemasukan' ? 'selected' : '' %>>Pemasukan</option>
+                <option value="Pengeluaran" <%= typeof jenisTransaksiQuery !== 'undefined' && jenisTransaksiQuery === 'Pengeluaran' ? 'selected' : '' %>>Pengeluaran</option>
             </select>
             
             <button type="submit" class="btn btn-primary btn-submit-filter">Filter</button>
@@ -220,143 +220,68 @@
         <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
             <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
                 <% if (currentPage > 1) { %>
-                    <a href="?page=<%= currentPage - 1 %>&search=<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>&pendidikan=<%= typeof pendidikanQuery !== 'undefined' ? pendidikanQuery : '' %>" class="btn btn-secondary" style="padding: 5px 10px;">&laquo; Prev</a>
+                    <a href="?page=<%= currentPage - 1 %>&search=<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>&jenisTransaksi=<%= typeof jenisTransaksiQuery !== 'undefined' ? jenisTransaksiQuery : '' %>" class="btn btn-secondary" style="padding: 5px 10px;">&laquo; Prev</a>
                 <% } %>
                 
                 <% for(let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) { %>
-                    <a href="?page=<%= i %>&search=<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>&pendidikan=<%= typeof pendidikanQuery !== 'undefined' ? pendidikanQuery : '' %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-secondary' %>" style="padding: 5px 10px;"><%= i %></a>
+                    <a href="?page=<%= i %>&search=<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>&jenisTransaksi=<%= typeof jenisTransaksiQuery !== 'undefined' ? jenisTransaksiQuery : '' %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-secondary' %>" style="padding: 5px 10px;"><%= i %></a>
                 <% } %>
                 
                 <% if (currentPage < totalPages) { %>
-                    <a href="?page=<%= currentPage + 1 %>&search=<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>&pendidikan=<%= typeof pendidikanQuery !== 'undefined' ? pendidikanQuery : '' %>" class="btn btn-secondary" style="padding: 5px 10px;">Next &raquo;</a>
+                    <a href="?page=<%= currentPage + 1 %>&search=<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>&jenisTransaksi=<%= typeof jenisTransaksiQuery !== 'undefined' ? jenisTransaksiQuery : '' %>" class="btn btn-secondary" style="padding: 5px 10px;">Next &raquo;</a>
                 <% } %>
             </div>
             <div style="text-align: center; margin-top: 10px; color: #64748b; font-size: 14px;">
                 Menampilkan halaman <%= currentPage %> dari <%= totalPages %> (Total: <%= totalData %> data)
             </div>
         <% } %>
-
     </div>
 
-    <style>
-    /* Modal Styles */
-    .modal {
-        display: none; 
-        position: fixed; 
-        z-index: 1000; 
-        left: 0;
-        top: 0;
-        width: 100%; 
-        height: 100%; 
-        background-color: rgba(0,0,0,0.6); 
-        overflow-y: auto;
-        padding-top: 50px;
-        padding-bottom: 50px;
-    }
-    .modal-content {
-        background-color: #ffffff;
-        margin: 0 auto; 
-        padding: 30px;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 800px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-    </style>
-
-    <!-- Delete Modal -->
-    <div id="deleteModal" class="modal">
-      <div class="modal-content" style="max-width: 400px; text-align: center; padding: 40px 30px; margin-top: 100px;">
-        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #dc3545; margin-bottom: 20px;"></i>
-        <h3 style="margin-bottom: 15px; color: var(--text-main);">Konfirmasi Hapus</h3>
-        <p style="color: #666; margin-bottom: 30px; line-height: 1.5;">Apakah Anda yakin ingin menghapus data ini? Nominal tagihan santri akan dikembalikan seperti semula.</p>
-        <form id="deleteForm" method="POST" action="">
-            <div style="display: flex; gap: 15px; justify-content: center;">
-                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()" style="padding: 10px 25px;">Batal</button>
-                <button type="submit" class="btn btn-danger" style="background-color: #dc3545; color: white; border: none; padding: 10px 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">Ya, Hapus Data</button>
-            </div>
-        </form>
-      </div>
-    </div>
 
     <!-- Edit Modal -->
     <div id="editModal" class="modal">
-      <div class="modal-content" style="max-width: 500px; padding: 40px 30px;">
-        <h3 style="margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px;">Edit Transaksi</h3>
+      <div class="modal-content">
+        <h3>Edit Transaksi</h3>
         <form id="editTransaksiForm" method="POST" action="" onsubmit="handleAjaxSubmitGlobal(event, this)">
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Tanggal Transaksi</label>
-                <input type="text" name="tanggal" id="editTanggal" class="form-control" style="width: 100%;" required>
-                <small style="color: #666;">Format: DD Bulan YYYY (contoh: 15 Juli 2026)</small>
+                <label>Tanggal Transaksi</label>
+                <input type="text" name="tanggal" id="editTanggal" class="form-control" required>
+                <small>Format: DD Bulan YYYY (contoh: 15 Juli 2026)</small>
             </div>
             <div style="margin-bottom: 15px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Nominal (Rp)</label>
-                <input type="number" name="nominal" id="editNominal" class="form-control" style="width: 100%;" required>
+                <label>Nominal (Rp)</label>
+                <input type="number" name="nominal" id="editNominal" class="form-control" required>
             </div>
             <div style="margin-bottom: 25px;">
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Metode Pembayaran</label>
-                <select name="metodePembayaran" id="editMetode" class="form-control" style="width: 100%;" required>
+                <label>Metode Pembayaran</label>
+                <select name="metodePembayaran" id="editMetode" class="form-control" required>
                     <option value="Cash">Cash</option>
                     <option value="Transfer">Transfer</option>
                 </select>
             </div>
             <div style="display: flex; gap: 15px; justify-content: flex-end;">
-                <button type="button" class="btn btn-secondary" onclick="closeEditModal()" style="padding: 10px 25px;">Batal</button>
-                <button type="submit" class="btn btn-primary" style="padding: 10px 25px; border-radius: 4px; cursor: pointer; font-weight: bold;">Simpan Perubahan</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
             </div>
         </form>
       </div>
     </div>
 
-    <!-- Modal / Pesan Sukses jika dialihkan dari POST redirect (Simulasi) -->
-    <% if(typeof success !=='undefined' && success) { %>
-        <div style="position: fixed; top: 20px; right: 20px; background-color: var(--success); color: white; padding: 15px 25px; border-radius: var(--radius-sm); box-shadow: var(--shadow-md); z-index: 1000; display: flex; align-items: center; gap: 10px;"
-            id="successAlert">
-            <i class="fas fa-check-circle"></i> Transaksi Berhasil Disimpan!
-        </div>
-        <script>
-            setTimeout(() => {
-                document.getElementById('successAlert').style.display = 'none';
-            }, 3000);
-        </script>
-    <% } %>
-
-    <!-- Modal / Pesan Error -->
-    <% if(typeof error !=='undefined' && error) { %>
-        <div style="position: fixed; top: 20px; right: 20px; background-color: var(--danger); color: white; padding: 15px 25px; border-radius: var(--radius-sm); box-shadow: var(--shadow-md); z-index: 1000; display: flex; align-items: center; gap: 10px;"
-            id="errorAlert">
-            <i class="fas fa-times-circle"></i> <%= error %>
-        </div>
-        <script>
-            setTimeout(() => {
-                document.getElementById('errorAlert').style.display = 'none';
-            }, 5000);
-        </script>
-
-    <% } %>
+    <!-- Modal / Pesan Sukses atau Error -->
+    <%- include('partials/alert-message') %>
 
     <!-- Kwitansi Modal (Iframe) -->
     <div id="kwitansiModal" class="modal">
-        <div class="modal-content" style="max-width: 1000px; padding: 0; position: relative; height: 90vh; display: flex; flex-direction: column;">
-            <div style="background-color: #f8f9fa; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; border-radius: 8px 8px 0 0;">
-                <h3 style="margin: 0; color: var(--primary);"><i class="fas fa-file-invoice-dollar"></i> Preview Kwitansi</h3>
-                <button type="button" onclick="closeKwitansiModal()" class="btn btn-danger" style="padding: 8px 15px; border-radius: 4px; background-color: #dc3545; color: white; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-weight: bold;"><i class="fas fa-times"></i> Tutup</button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-invoice-dollar"></i> Preview Kwitansi</h3>
+                <button type="button" onclick="closeKwitansiModal()" class="btn btn-danger"><i class="fas fa-times"></i> Tutup</button>
             </div>
-            <div style="flex: 1; padding: 0; background-color: #e5e7eb;">
-                <iframe id="kwitansiIframe" src="" style="width: 100%; height: 100%; border: none; border-radius: 0 0 8px 8px;"></iframe>
+            <div class="modal-body">
+                <iframe id="kwitansiIframe" src=""></iframe>
             </div>
         </div>
     </div>
-    <script>
-        function openKwitansiModal(trxId) {
-            document.getElementById('kwitansiIframe').src = '/kwitansi/' + trxId;
-            document.getElementById('kwitansiModal').style.display = 'block';
-        }
-        function closeKwitansiModal() {
-            document.getElementById('kwitansiModal').style.display = 'none';
-            document.getElementById('kwitansiIframe').src = '';
-        }
-    </script>
 
-    <script src="/js/input-transaksi.js?v=6"></script>
+    <script src="/js/input-transaksi.js?v=9"></script>
 <%- include('partials/footer') %>

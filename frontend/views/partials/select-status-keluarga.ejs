@@ -1,0 +1,16 @@
+<%
+const nameAttr = typeof name !== 'undefined' ? name : 'statusKeluarga';
+const idAttr = typeof id !== 'undefined' ? id : '';
+const classAttr = typeof className !== 'undefined' ? className : 'form-input';
+const requiredAttr = typeof required !== 'undefined' && required ? 'required' : '';
+const selectedVal = typeof selectedValue !== 'undefined' ? selectedValue : '';
+const placeholderText = typeof placeholder !== 'undefined' ? placeholder : '-- Pilih Status --';
+%>
+<select name="<%= nameAttr %>" <%- idAttr ? `id="${idAttr}"` : '' %> class="<%= classAttr %>" <%- requiredAttr %>>
+    <% if (placeholderText) { %>
+        <option value=""><%= placeholderText %></option>
+    <% } %>
+    <option value="Anak Kandung" <%= selectedVal === 'Anak Kandung' ? 'selected' : '' %>>Anak Kandung</option>
+    <option value="Anak Tiri" <%= selectedVal === 'Anak Tiri' ? 'selected' : '' %>>Anak Tiri</option>
+    <option value="Anak Angkat" <%= selectedVal === 'Anak Angkat' ? 'selected' : '' %>>Anak Angkat</option>
+</select>

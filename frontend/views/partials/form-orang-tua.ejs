@@ -1,0 +1,150 @@
+<%
+// Props:
+// - idPrefix: string (e.g. 'm_', default: '')
+// - groupClass: string (e.g. 'form-group' or 'form-group-modal', default: 'form-group')
+// - required: boolean (default: true)
+// - layout: 'stacked' | 'grid' | 'flex-rows' | 'grid-rows' (default: 'stacked')
+// - showEmail: boolean (default: false)
+
+const prefix = typeof idPrefix !== 'undefined' ? idPrefix : '';
+const grpClass = typeof groupClass !== 'undefined' ? groupClass : 'form-group';
+const isRequired = typeof required !== 'undefined' ? required : true;
+const reqAttr = isRequired ? 'required' : '';
+const reqLabelClass = isRequired ? 'required' : '';
+const lay = typeof layout !== 'undefined' ? layout : 'stacked';
+const includeEmail = typeof showEmail !== 'undefined' ? showEmail : false;
+%>
+
+<% if (lay === 'stacked') { %>
+    <% if (includeEmail) { %>
+        <div class="<%= grpClass %>">
+            <label class="<%= reqLabelClass %>">Email Pendaftar (Orang Tua/Wali)</label>
+            <input type="email" name="email" id="<%= prefix %>email" class="form-input" placeholder="contoh@email.com" <%= reqAttr %>>
+        </div>
+    <% } %>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Nama Ayah</label>
+        <input type="text" name="namaAyah" id="<%= prefix %>namaAyah" class="form-input" placeholder="Nama lengkap ayah" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Pekerjaan Ayah</label>
+        <input type="text" name="pekerjaanAyah" id="<%= prefix %>pekerjaanAyah" class="form-input" placeholder="Pekerjaan ayah saat ini" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">No. Telepon/WhatsApp Ayah</label>
+        <input type="tel" name="teleponAyah" id="<%= prefix %>teleponAyah" class="form-input" placeholder="08xxxxxxxxxx" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Nama Ibu</label>
+        <input type="text" name="namaIbu" id="<%= prefix %>namaIbu" class="form-input" placeholder="Nama lengkap ibu" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Pekerjaan Ibu</label>
+        <input type="text" name="pekerjaanIbu" id="<%= prefix %>pekerjaanIbu" class="form-input" placeholder="Pekerjaan ibu saat ini" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">No. Telepon/WhatsApp Ibu</label>
+        <input type="tel" name="teleponIbu" id="<%= prefix %>teleponIbu" class="form-input" placeholder="08xxxxxxxxxx" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Alamat Lengkap</label>
+        <textarea name="alamat" id="<%= prefix %>alamat" class="form-input" placeholder="Alamat domisili saat ini" <%= reqAttr %>></textarea>
+    </div>
+<% } else if (lay === 'grid') { %>
+    <% if (includeEmail) { %>
+        <div class="<%= grpClass %>">
+            <label class="<%= reqLabelClass %>">Email Pendaftar (Orang Tua/Wali)</label>
+            <input type="email" name="email" id="<%= prefix %>email" class="form-input" placeholder="contoh@email.com" <%= reqAttr %>>
+        </div>
+    <% } %>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Nama Ayah</label>
+        <input type="text" name="namaAyah" id="<%= prefix %>namaAyah" class="form-input" placeholder="Nama lengkap ayah" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Pekerjaan Ayah</label>
+        <input type="text" name="pekerjaanAyah" id="<%= prefix %>pekerjaanAyah" class="form-input" placeholder="Pekerjaan ayah saat ini" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">No. Telepon/WhatsApp Ayah</label>
+        <input type="tel" name="teleponAyah" id="<%= prefix %>teleponAyah" class="form-input" placeholder="08xxxxxxxxxx" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Nama Ibu</label>
+        <input type="text" name="namaIbu" id="<%= prefix %>namaIbu" class="form-input" placeholder="Nama lengkap ibu" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">Pekerjaan Ibu</label>
+        <input type="text" name="pekerjaanIbu" id="<%= prefix %>pekerjaanIbu" class="form-input" placeholder="Pekerjaan ibu saat ini" <%= reqAttr %>>
+    </div>
+    <div class="<%= grpClass %>">
+        <label class="<%= reqLabelClass %>">No. Telepon/WhatsApp Ibu</label>
+        <input type="tel" name="teleponIbu" id="<%= prefix %>teleponIbu" class="form-input" placeholder="08xxxxxxxxxx" <%= reqAttr %>>
+    </div>
+<% } else if (lay === 'flex-rows') { %>
+    <div class="form-group" style="display: flex; gap: 20px; margin-bottom: 15px;">
+        <div style="flex: 1;">
+            <label style="display:block; margin-bottom: 5px; font-weight: 500;" class="<%= reqLabelClass %>">Nama Ayah</label>
+            <input type="text" name="namaAyah" id="<%= prefix %>namaAyah" class="form-input" <%= reqAttr %>>
+        </div>
+        <div style="flex: 1;">
+            <label style="display:block; margin-bottom: 5px; font-weight: 500;" class="<%= reqLabelClass %>">Pekerjaan Ayah</label>
+            <input type="text" name="pekerjaanAyah" id="<%= prefix %>pekerjaanAyah" class="form-input" <%= reqAttr %>>
+        </div>
+        <div style="flex: 1;">
+            <label style="display:block; margin-bottom: 5px; font-weight: 500;" class="<%= reqLabelClass %>">Telepon Ayah</label>
+            <input type="tel" name="teleponAyah" id="<%= prefix %>teleponAyah" class="form-input" <%= reqAttr %>>
+        </div>
+    </div>
+    <div class="form-group" style="display: flex; gap: 20px; margin-bottom: 15px;">
+        <div style="flex: 1;">
+            <label style="display:block; margin-bottom: 5px; font-weight: 500;" class="<%= reqLabelClass %>">Nama Ibu</label>
+            <input type="text" name="namaIbu" id="<%= prefix %>namaIbu" class="form-input" <%= reqAttr %>>
+        </div>
+        <div style="flex: 1;">
+            <label style="display:block; margin-bottom: 5px; font-weight: 500;" class="<%= reqLabelClass %>">Pekerjaan Ibu</label>
+            <input type="text" name="pekerjaanIbu" id="<%= prefix %>pekerjaanIbu" class="form-input" <%= reqAttr %>>
+        </div>
+        <div style="flex: 1;">
+            <label style="display:block; margin-bottom: 5px; font-weight: 500;" class="<%= reqLabelClass %>">Telepon Ibu</label>
+            <input type="tel" name="teleponIbu" id="<%= prefix %>teleponIbu" class="form-input" <%= reqAttr %>>
+        </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 15px;">
+        <label style="display:block; margin-bottom: 5px; font-weight: 500;" class="<%= reqLabelClass %>">Alamat Lengkap</label>
+        <textarea name="alamat" id="<%= prefix %>alamat" class="form-input" rows="3" <%= reqAttr %>></textarea>
+    </div>
+<% } else if (lay === 'grid-rows') { %>
+    <div class="modal-grid">
+        <div class="form-group-modal">
+            <label class="<%= reqLabelClass %>">Nama Ayah</label>
+            <input type="text" name="namaAyah" id="<%= prefix %>namaAyah" class="form-input" <%= reqAttr %>>
+        </div>
+        <div class="form-group-modal">
+            <label class="<%= reqLabelClass %>">Pekerjaan Ayah</label>
+            <input type="text" name="pekerjaanAyah" id="<%= prefix %>pekerjaanAyah" class="form-input" <%= reqAttr %>>
+        </div>
+        <div class="form-group-modal">
+            <label class="<%= reqLabelClass %>">Telepon Ayah</label>
+            <input type="tel" name="teleponAyah" id="<%= prefix %>teleponAyah" class="form-input" <%= reqAttr %>>
+        </div>
+    </div>
+    <div class="modal-grid">
+        <div class="form-group-modal">
+            <label class="<%= reqLabelClass %>">Nama Ibu</label>
+            <input type="text" name="namaIbu" id="<%= prefix %>namaIbu" class="form-input" <%= reqAttr %>>
+        </div>
+        <div class="form-group-modal">
+            <label class="<%= reqLabelClass %>">Pekerjaan Ibu</label>
+            <input type="text" name="pekerjaanIbu" id="<%= prefix %>pekerjaanIbu" class="form-input" <%= reqAttr %>>
+        </div>
+        <div class="form-group-modal">
+            <label class="<%= reqLabelClass %>">Telepon Ibu</label>
+            <input type="tel" name="teleponIbu" id="<%= prefix %>teleponIbu" class="form-input" <%= reqAttr %>>
+        </div>
+    </div>
+    <div class="form-group-modal full">
+        <label class="<%= reqLabelClass %>">Alamat Lengkap</label>
+        <textarea name="alamat" id="<%= prefix %>alamat" class="form-input" rows="3" <%= reqAttr %>></textarea>
+    </div>
+<% } %>

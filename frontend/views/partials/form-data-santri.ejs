@@ -1,0 +1,184 @@
+<% 
+const lay = typeof layout !== 'undefined' ? layout : 'stacked';
+const idPre = typeof idPrefix !== 'undefined' ? idPrefix : '';
+const cGroup = typeof groupClass !== 'undefined' ? groupClass : (lay === 'flat-grid' || lay === 'grid-rows' ? 'form-group-modal' : 'form-group');
+const nInput = typeof nameInputName !== 'undefined' ? nameInputName : 'namaSantri';
+const gInputType = typeof genderInputType !== 'undefined' ? genderInputType : 'radio';
+const gInputName = typeof genderInputName !== 'undefined' ? genderInputName : 'jenisKelamin';
+const isRead = typeof isReadonly !== 'undefined' ? isReadonly : false;
+%>
+
+<% if (lay === 'stacked') { %>
+    <div class="<%= cGroup %>">
+        <label class="required">Nama Lengkap Santri</label>
+        <input type="text" name="<%= nInput %>" id="<%= idPre %>nama" class="form-input" placeholder="Masukkan nama lengkap" required>
+    </div>
+
+    <div class="<%= cGroup %>">
+        <label>Nama Panggilan</label>
+        <input type="text" name="namaPanggilan" id="<%= idPre %>namaPanggilan" class="form-input" placeholder="Masukkan nama panggilan">
+    </div>
+
+    <div class="<%= cGroup %>">
+        <label class="required">Jenis Kelamin</label>
+        <% if (gInputType === 'radio') { %>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="<%= gInputName %>" value="Laki-laki" required> Laki-laki
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="<%= gInputName %>" value="Perempuan"> Perempuan
+                </label>
+            </div>
+        <% } else { %>
+            <select name="<%= gInputName %>" id="<%= idPre %>jenisKelamin" class="form-input" required>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
+        <% } %>
+    </div>
+
+    <div class="<%= cGroup %>" style="display: flex; gap: 15px;">
+        <div style="flex: 1;">
+            <label class="required">Tempat Lahir</label>
+            <input type="text" name="tempatLahir" id="<%= idPre %>tempatLahir" class="form-input" placeholder="Kota tempat lahir" required>
+        </div>
+        <div style="flex: 1;">
+            <label class="required">Tanggal Lahir</label>
+            <input type="date" name="tanggalLahir" id="<%= idPre %>tanggalLahir" class="form-input" required>
+        </div>
+    </div>
+
+    <div class="<%= cGroup %>">
+        <label class="required">Agama</label>
+        <% if (isRead) { %>
+            <input type="text" name="agama" id="<%= idPre %>agama" class="form-input" value="Islam" readonly>
+        <% } else { %>
+            <%- include('select-agama', { 
+                name: 'agama',
+                id: idPre + 'agama',
+                className: 'form-input',
+                required: true,
+                selectedValue: 'Islam'
+            }) %>
+        <% } %>
+    </div>
+
+    <div class="<%= cGroup %>">
+        <label class="required">Status dalam Keluarga</label>
+        <%- include('select-status-keluarga', { 
+            name: 'statusKeluarga',
+            id: idPre + 'statusKeluarga',
+            className: 'form-input',
+            required: true
+        }) %>
+    </div>
+
+    <div class="<%= cGroup %>">
+        <label class="required">Anak ke (berdasarkan Kartu Keluarga)</label>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span>Anak ke</span>
+            <input type="number" name="anakKe" id="<%= idPre %>anakKe" class="form-input" style="width: 70px;" required>
+            <span>dari</span>
+            <input type="number" name="dariBersaudara" id="<%= idPre %>dariBersaudara" class="form-input" style="width: 70px;" required>
+            <span>Bersaudara</span>
+        </div>
+    </div>
+
+    <div class="<%= cGroup %>">
+        <label>Asal Sekolah</label>
+        <input type="text" name="asalSekolah" id="<%= idPre %>asalSekolah" class="form-input"
+            placeholder="Nama asal sekolah (contoh: BimBa / TK ...). Kosongkan jika belum pernah.">
+    </div>
+
+<% } else if (lay === 'flat-grid' || lay === 'grid-rows' || lay === 'flex-rows') { %>
+    <% if (lay === 'grid-rows') { %><div class="modal-grid"><% } else if (lay === 'flex-rows') { %><div class="<%= cGroup %>" style="display: flex; gap: 20px; margin-bottom: 15px;"><% } %>
+    
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label class="required">Nama Lengkap Santri</label>
+            <input type="text" name="<%= nInput %>" id="<%= idPre %>nama" class="form-input" required>
+        </div>
+        
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label>Nama Panggilan</label>
+            <input type="text" name="namaPanggilan" id="<%= idPre %>namaPanggilan" class="form-input">
+        </div>
+        
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label class="required">Jenis Kelamin</label>
+            <% if (gInputType === 'radio') { %>
+                <div class="radio-group" style="margin-top: 5px;">
+                    <label class="radio-label">
+                        <input type="radio" name="<%= gInputName %>" value="Laki-laki" required> Laki-laki
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="<%= gInputName %>" value="Perempuan"> Perempuan
+                    </label>
+                </div>
+            <% } else { %>
+                <select name="<%= gInputName %>" id="<%= idPre %>jenisKelamin" class="form-input" required>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            <% } %>
+        </div>
+
+    <% if (lay === 'grid-rows' || lay === 'flex-rows') { %></div><% } %>
+    <% if (lay === 'grid-rows') { %><div class="modal-grid"><% } else if (lay === 'flex-rows') { %><div class="<%= cGroup %>" style="display: flex; gap: 20px; margin-bottom: 15px;"><% } %>
+
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label class="required">Tempat Lahir</label>
+            <input type="text" name="tempatLahir" id="<%= idPre %>tempatLahir" class="form-input" required>
+        </div>
+        
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label class="required">Tanggal Lahir</label>
+            <input type="date" name="tanggalLahir" id="<%= idPre %>tanggalLahir" class="form-input" required>
+        </div>
+        
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label class="required">Agama</label>
+            <% if (isRead) { %>
+                <input type="text" name="agama" id="<%= idPre %>agama" class="form-input" value="Islam" readonly>
+            <% } else { %>
+                <%- include('select-agama', { 
+                    name: 'agama',
+                    id: idPre + 'agama',
+                    className: 'form-input',
+                    required: true,
+                    selectedValue: 'Islam'
+                }) %>
+            <% } %>
+        </div>
+
+    <% if (lay === 'grid-rows' || lay === 'flex-rows') { %></div><% } %>
+    <% if (lay === 'grid-rows') { %><div class="modal-grid"><% } else if (lay === 'flex-rows') { %><div class="<%= cGroup %>" style="display: flex; gap: 20px; margin-bottom: 15px;"><% } %>
+
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label class="required">Status Keluarga</label>
+            <%- include('select-status-keluarga', { 
+                name: 'statusKeluarga',
+                id: idPre + 'statusKeluarga',
+                className: 'form-input',
+                required: true,
+                placeholder: ''
+            }) %>
+        </div>
+        
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label class="required">Anak ke (dari Bersaudara)</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="number" name="anakKe" id="<%= idPre %>anakKe" class="form-input" required>
+                <span>dari</span>
+                <input type="number" name="dariBersaudara" id="<%= idPre %>dariBersaudara" class="form-input" required>
+            </div>
+        </div>
+        
+        <% if (lay === 'flex-rows') { %><div style="flex: 1;"><% } else { %><div class="<%= cGroup %>"><% } %>
+            <label>Asal Sekolah</label>
+            <input type="text" name="asalSekolah" id="<%= idPre %>asalSekolah" class="form-input">
+        </div>
+
+    <% if (lay === 'grid-rows' || lay === 'flex-rows') { %></div><% } %>
+
+<% } %>

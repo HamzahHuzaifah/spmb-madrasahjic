@@ -1,0 +1,119 @@
+<link rel="stylesheet" href="/css/info-pembayaran.css">
+
+<div class="form-card" style="max-width: 800px; margin: 0 auto; padding: 30px;">
+    <h2 style="color: var(--primary); text-align: center; margin-bottom: 10px;">Cek Info Pembayaran</h2>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Masukkan Nomor Pendaftaran untuk mengecek status tagihan dan pembayaran santri.</p>
+    
+    <% if (error) { %>
+        <div class="alert alert-error" style="margin-bottom: 20px;">
+            <i class="fas fa-exclamation-circle"></i> <%= error %>
+        </div>
+    <% } %>
+
+    <form action="/info-pembayaran" method="POST" style="margin-bottom: 40px;">
+        <div class="search-form-group">
+            <input type="text" name="nomorPendaftaran" class="form-input" placeholder="Masukkan Nomor Pendaftaran (cth: SPMB-2627-...)" value="<%= nomorPendaftaran || '' %>" required style="flex: 1;">
+            <button type="submit" class="btn-submit" style="width: auto; padding: 12px 25px;"><i class="fas fa-search"></i> Cari</button>
+        </div>
+    </form>
+
+    <% if (result && result.santri) { %>
+        <div class="result-container" style="border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+            <div style="background-color: #f8fafc; padding: 20px; border-bottom: 1px solid var(--border);">
+                <h3 style="margin: 0; color: var(--text-main); font-size: 18px;">
+                    <i class="fas fa-user-graduate" style="color: var(--primary); margin-right: 10px;"></i>
+                    Informasi Santri
+                </h3>
+            </div>
+            <div style="padding: 20px;">
+                <div class="info-grid">
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Nama Santri</div>
+                        <div style="font-weight: bold; color: var(--text-main);"><%= result.santri.nama %></div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Nomor Pendaftaran</div>
+                        <div style="font-weight: bold; color: var(--text-main);"><%= result.santri.nomorPendaftaran %></div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Tingkat Pendidikan</div>
+                        <div style="font-weight: bold; color: var(--text-main);">
+                            <%= result.jenis === 'baru' ? result.santri.pendidikan : result.santri.lanjutKe %>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Jalur Pendaftaran</div>
+                        <div style="font-weight: bold; color: var(--text-main);"><%= result.santri.jalurPendaftaran %></div>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px dashed var(--border); margin: 25px 0;">
+
+                <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--text-main); font-size: 18px;">
+                    <i class="fas fa-file-invoice-dollar" style="color: var(--warning); margin-right: 10px;"></i>
+                    Status Tagihan
+                </h3>
+
+                <% if (result.tagihan) { %>
+                    <div class="tagihan-grid">
+                        <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">Total Tagihan</div>
+                            <div style="font-weight: bold; font-size: 18px; color: var(--text-main);">
+                                Rp <%= result.tagihan.totalTagihan.toLocaleString('id-ID') %>
+                            </div>
+                        </div>
+                        <div style="background: #ecfdf5; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">Total Dibayar</div>
+                            <div style="font-weight: bold; font-size: 18px; color: #10b981;">
+                                Rp <%= result.tagihan.totalBayar.toLocaleString('id-ID') %>
+                            </div>
+                        </div>
+                        <div style="background: #fef2f2; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">Sisa Pembayaran</div>
+                            <div style="font-weight: bold; font-size: 18px; color: #ef4444;">
+                                Rp <%= result.tagihan.sisaBayar.toLocaleString('id-ID') %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 5px;">Status Pembayaran:</div>
+                        <% if (result.tagihan.status === 'Lunas') { %>
+                            <span style="display: inline-block; padding: 8px 20px; background-color: #10b981; color: white; border-radius: 20px; font-weight: bold; font-size: 16px;">
+                                <i class="fas fa-check-circle"></i> LUNAS
+                            </span>
+                        <% } else { %>
+                            <span style="display: inline-block; padding: 8px 20px; background-color: #ef4444; color: white; border-radius: 20px; font-weight: bold; font-size: 16px;">
+                                <i class="fas fa-times-circle"></i> BELUM LUNAS
+                            </span>
+                        <% } %>
+                    </div>
+
+                    <% if (result.tagihan.status !== 'Lunas') { %>
+                        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 20px;">
+                            <h4 style="margin-top: 0; color: #1e40af; margin-bottom: 10px;">Instruksi Pembayaran</h4>
+                            <p style="margin: 0 0 10px 0; color: #1e3a8a; font-size: 14px;">Silakan lakukan transfer pembayaran untuk sisa tagihan Anda ke rekening berikut:</p>
+                            <div style="background: white; padding: 15px; border-radius: 6px; border: 1px solid #e5e7eb; display: inline-block;">
+                                <div style="font-weight: bold; color: var(--text-main); font-size: 16px;">Bank Syariah Indonesia (BSI)</div>
+                                <div style="font-size: 24px; font-weight: bold; color: var(--primary); letter-spacing: 2px; margin: 5px 0;">7123 456 789</div>
+                                <div style="color: var(--text-muted); font-size: 14px;">a.n. Yayasan Madrasah JIC</div>
+                            </div>
+                            <p style="margin: 15px 0 0 0; color: #1e3a8a; font-size: 14px;">
+                                Setelah melakukan transfer, harap kirimkan bukti transfer ke Tata Usaha atau nomor WhatsApp resmi kami di <strong>0812-3456-7890</strong>.
+                            </p>
+                        </div>
+                    <% } %>
+
+                <% } else { %>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i> Data tagihan untuk santri ini belum tersedia. Silakan hubungi bagian Tata Usaha.
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/" style="color: var(--text-muted); text-decoration: none;"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a>
+    </div>
+</div>

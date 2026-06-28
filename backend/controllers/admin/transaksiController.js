@@ -1,6 +1,7 @@
 const TransaksiModel = require('../../models/TransaksiModel');
 const SantriModel = require('../../models/SantriModel');
 const TunggakanModel = require('../../models/TunggakanModel');
+const xlsx = require('xlsx');
 
 exports.getInputTransaksi = async (req, res) => {
     try {
@@ -17,10 +18,10 @@ exports.getInputTransaksi = async (req, res) => {
             start: req.query.startDate || '',
             end: req.query.endDate || ''
         };
-        const filterPendidikan = req.query.pendidikan || '';
+        const filterJenis = req.query.jenisTransaksi || '';
 
-        const transaksiTerbaru = await TransaksiModel.getTransaksiPaginated(limit, offset, search, filterTanggal, filterPendidikan);
-        const totalData = await TransaksiModel.getTotalTransaksi(search, filterTanggal, filterPendidikan);
+        const transaksiTerbaru = await TransaksiModel.getTransaksiPaginated(limit, offset, search, filterTanggal, filterJenis);
+        const totalData = await TransaksiModel.getTotalTransaksi(search, filterTanggal, filterJenis);
         const totalPages = Math.ceil(totalData / limit);
 
         // KITA HAPUS getAllSantri dan getAllTunggakan agar memori aman
@@ -38,7 +39,7 @@ exports.getInputTransaksi = async (req, res) => {
             searchQuery: search,
             startDateQuery: filterTanggal.start,
             endDateQuery: filterTanggal.end,
-            pendidikanQuery: filterPendidikan
+            jenisTransaksiQuery: filterJenis
         });
     } catch (err) {
         console.error(err);
@@ -277,6 +278,47 @@ exports.editTransaksi = async (req, res) => {
         res.json({ success: true, message: 'Transaksi berhasil diperbarui!' });
     } catch (err) {
         console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.exportTransaksiExcel = async (req, res) => {
+    try {
+        const search = req.query.search || '';
+        const filterTanggal = {
+            start: req.query.startDate || '',
+            end: req.query.endDate || ''
+        };
+        const filterJenis = req.query.jenisTransaksi || '';
+
+        const fullTransaksiData = await TransaksiModel.getAllTransaksiFiltered(search, filterTanggal, filterJenis);
+
+        const dataToExport = fullTransaksiData.map((item, index) => ({
+            'No': index + 1,
+            'Tanggal': item.tanggal,
+            'No. Transaksi': item.noTransaksi,
+            'Jenis Transaksi': item.jenis,
+            'Nama Pendaftar / Santri': item.namaSantri,
+            'Satuan Pendidikan': item.satuanPendidikan,
+            'Nominal': item.nominal,
+            'Metode Pembayaran': item.metodePembayaran,
+            'Kategori Dana': item.kategoriDana,
+            'Diterima Dari': item.diterimaDari,
+            'Dibayarkan Kepada': item.dibayarkanKepada,
+            'Nama Pemberi': item.namaPemberi
+        }));
+
+        const ws = xlsx.utils.json_to_sheet(dataToExport);
+        const wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, 'Data Transaksi');
+
+        const buffer = xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Disposition', `attachment; filename="Data_Transaksi.xlsx"`);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
+    } catch (err) {
+        console.error("Error Export Transaksi Excel:", err);
         res.status(500).send('Server Error');
     }
 };

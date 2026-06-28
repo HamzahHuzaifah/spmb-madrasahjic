@@ -1,0 +1,49 @@
+<%
+const actUrl = typeof actionUrl !== 'undefined' ? actionUrl : '';
+const sQuery = typeof searchQuery !== 'undefined' ? searchQuery : '';
+const fType = typeof filterType !== 'undefined' ? filterType : ''; // 'pendidikan' or 'status'
+const pType = typeof pendidikanType !== 'undefined' ? pendidikanType : 'filter_baru';
+const pPlaceholder = typeof pendidikanPlaceholder !== 'undefined' ? pendidikanPlaceholder : 'Semua Pendidikan';
+const pQuery = typeof pendidikanQuery !== 'undefined' ? pendidikanQuery : '';
+const stQuery = typeof statusQuery !== 'undefined' ? statusQuery : '';
+const actHtml = typeof actionsHtml !== 'undefined' ? actionsHtml : '';
+
+// Detect if we should show the reset button
+let showReset = false;
+if (sQuery) showReset = true;
+if (fType === 'pendidikan' && pQuery) showReset = true;
+if (fType === 'status' && stQuery) showReset = true;
+%>
+<div class="filter-bar">
+    <form method="GET" action="<%= actUrl %>" class="filter-form">
+        <input type="text" name="search" id="searchInput" class="form-control filter-search" placeholder="Cari Nama Santri..." value="<%= sQuery %>">
+        
+        <% if (fType === 'pendidikan') { %>
+            <%- include('select-pendidikan', { 
+                type: pType,
+                name: 'pendidikan',
+                id: 'pendidikanInput',
+                className: 'form-control filter-select',
+                placeholder: pPlaceholder,
+                selectedValue: pQuery
+            }) %>
+        <% } else if (fType === 'status') { %>
+            <select name="status" id="statusInput" class="form-control filter-select">
+                <option value="">Semua Status Bayar</option>
+                <option value="Lunas" <%= stQuery === 'Lunas' ? 'selected' : '' %>>Lunas</option>
+                <option value="Belum Lunas" <%= stQuery === 'Belum Lunas' ? 'selected' : '' %>>Belum Lunas</option>
+            </select>
+        <% } %>
+
+        <button type="submit" class="btn btn-primary btn-submit-filter">Cari & Filter</button>
+        <% if (showReset) { %>
+            <a href="<%= actUrl %>" class="btn btn-secondary btn-reset-filter" style="text-decoration: none;">Reset</a>
+        <% } %>
+    </form>
+
+    <% if (actHtml) { %>
+        <div class="filter-actions">
+            <%- actHtml %>
+        </div>
+    <% } %>
+</div>

@@ -1,0 +1,32 @@
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.tagihan-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.search-form-group {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    .tagihan-grid {
+        grid-template-columns: 1fr;
+    }
+    .search-form-group {
+        flex-direction: column;
+    }
+    .search-form-group button {
+        width: 100% !important;
+    }
+}

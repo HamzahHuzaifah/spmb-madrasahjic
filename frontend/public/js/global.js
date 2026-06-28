@@ -48,7 +48,18 @@
         submitBtn.disabled = true;
 
         const formData = new FormData(formElement);
-        const data = Object.fromEntries(formData.entries());
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            let actualKey = key.endsWith('[]') ? key.slice(0, -2) : key;
+            if (data.hasOwnProperty(actualKey)) {
+                if (!Array.isArray(data[actualKey])) {
+                    data[actualKey] = [data[actualKey]];
+                }
+                data[actualKey].push(value);
+            } else {
+                data[actualKey] = key.endsWith('[]') ? [value] : value;
+            }
+        }
         
         try {
             const response = await fetch(formElement.action, {
@@ -121,6 +132,87 @@
         }
     }
 
+    async function handleAjaxSubmit(event, formElement) {
+        event.preventDefault();
+        const submitBtn = formElement.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+        submitBtn.disabled = true;
+
+        const formData = new FormData(formElement);
+        const data = {};
+        for (let [key, value] of formData.entries()) {
+            let actualKey = key.endsWith('[]') ? key.slice(0, -2) : key;
+            if (data.hasOwnProperty(actualKey)) {
+                if (!Array.isArray(data[actualKey])) {
+                    data[actualKey] = [data[actualKey]];
+                }
+                data[actualKey].push(value);
+            } else {
+                data[actualKey] = key.endsWith('[]') ? [value] : value;
+            }
+        }
+
+        // Normalisasi field beasiswa jenis kelamin
+        if (data.jenisKelaminBeasiswa) {
+            data.jenisKelamin = data.jenisKelaminBeasiswa;
+            delete data.jenisKelaminBeasiswa;
+        }
+
+        try {
+            const response = await fetch(formElement.action, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                // Sembunyikan modal form saat ini
+                const modal = formElement.closest('.modal');
+                if (modal) modal.style.display = 'none';
+
+                // Tampilkan successModal jika ada
+                const successModal = document.getElementById('successModal');
+                if (successModal) {
+                    if (result.noRef) {
+                        const noRefContainer = document.getElementById('successNoRefContainer');
+                        const noRefEl = document.getElementById('successNoRef');
+                        if (noRefEl) noRefEl.innerText = result.noRef;
+                        if (noRefContainer) noRefContainer.style.display = 'block';
+                    }
+                    successModal.style.display = 'block';
+                } else {
+                    // Fallback menggunakan Swal.fire jika tidak ada successModal kustom
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: result.message || 'Pendaftaran berhasil disimpan!',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: result.message || 'Terjadi kesalahan saat menyimpan data.'
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Gagal menghubungi server.'
+            });
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+
     // Global Select2 Initialization for Custom Dropdowns
     $(document).ready(function() {
         // Run on DOM ready
@@ -134,10 +226,17 @@
             // Check if already initialized by specific scripts (e.g., AJAX search)
             if (!$this.hasClass('select2-hidden-accessible')) {
                 const optionCount = $this.find('option').length;
-                $this.select2({
+                let select2Options = {
                     minimumResultsForSearch: optionCount < 8 ? Infinity : 10,
                     width: '100%'
-                });
+                };
+                
+                const $modal = $this.closest('.modal');
+                if ($modal.length > 0) {
+                    select2Options.dropdownParent = $modal;
+                }
+                
+                $this.select2(select2Options);
             }
         });
     }
@@ -261,20 +360,19 @@
     }
 
     // Control logic for the Page Loader
-    window.addEventListener('load', () => {
+    function hideLoader() {
         const loader = document.getElementById('pageLoader');
         if (loader) {
             loader.classList.add('hidden');
         }
-    });
+    }
 
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideLoader);
+    } else {
+        hideLoader();
+    }
     document.addEventListener('DOMContentLoaded', () => {
-        // Failsafe check if page is already loaded
-        if (document.readyState === 'complete') {
-            const loader = document.getElementById('pageLoader');
-            if (loader) loader.classList.add('hidden');
-        }
-
         // Intercept standard navigation links
         document.querySelectorAll('a').forEach(link => {
             const href = link.getAttribute('href');
@@ -284,6 +382,7 @@
                 !link.getAttribute('target') && 
                 !link.hasAttribute('download') &&
                 !href.includes('/logout') && 
+                !href.includes('export-excel') && 
                 (href.startsWith('/') || href.includes(window.location.host))
             ) {
                 link.addEventListener('click', () => {
@@ -303,3 +402,26 @@
             }
         });
     });
+
+    function confirmDelete(actionUrl, customText) {
+        const text = customText || "Data yang dihapus tidak dapat dikembalikan!";
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            focusCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = actionUrl;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }

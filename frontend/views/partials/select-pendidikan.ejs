@@ -1,0 +1,72 @@
+<%
+// Define all possible options and their values
+const optionsMap = {
+    // 1. Filter Baru: Hanya jenjang utama reguler
+    'filter_baru': [
+        { value: 'PAUDQu', label: 'PAUDQu' },
+        { value: 'TPQ', label: 'TPQ' },
+        { value: 'MDT', label: 'MDT' }
+    ],
+    // 2. Filter Daftar Ulang: Hanya jenjang utama naik kelas (PAUDQu B, TPQ, MDT)
+    'filter_lama': [
+        { value: 'PAUDQu B', label: 'PAUDQu B' },
+        { value: 'TPQ', label: 'TPQ' },
+        { value: 'MDT', label: 'MDT' }
+    ],
+    // 3. Form Baru / Santri Baru: Semua sub-tingkat lengkap
+    'form_baru': [
+        { value: 'PAUDQu A', label: 'PAUDQu A' },
+        { value: 'PAUDQu B', label: 'PAUDQu B' },
+        { value: 'TPQ A', label: 'TPQ A' },
+        { value: 'TPQ B', label: 'TPQ B' },
+        { value: 'MDT 1', label: 'MDT 1' },
+        { value: 'MDT 2', label: 'MDT 2' },
+        { value: 'MDT 3', label: 'MDT 3' },
+        { value: 'MDT 4', label: 'MDT 4' }
+    ],
+    // 4. Form Daftar Ulang - Unit Sebelumnya (tanpa MDT 4)
+    'form_unit_sebelumnya': [
+        { value: 'PAUDQu A', label: 'PAUDQu A' },
+        { value: 'PAUDQu B', label: 'PAUDQu B' },
+        { value: 'TPQ A', label: 'TPQ A' },
+        { value: 'TPQ B', label: 'TPQ B' },
+        { value: 'MDT 1', label: 'MDT 1' },
+        { value: 'MDT 2', label: 'MDT 2' },
+        { value: 'MDT 3', label: 'MDT 3' }
+    ],
+    // 5. Form Daftar Ulang - Lanjut Ke (tanpa PAUDQu A)
+    'form_lanjut_ke': [
+        { value: 'PAUDQu B', label: 'PAUDQu B' },
+        { value: 'TPQ A', label: 'TPQ A' },
+        { value: 'TPQ B', label: 'TPQ B' },
+        { value: 'MDT 1', label: 'MDT 1' },
+        { value: 'MDT 2', label: 'MDT 2' },
+        { value: 'MDT 3', label: 'MDT 3' },
+        { value: 'MDT 4', label: 'MDT 4' }
+    ],
+    // 6. Form Transaksi - Khusus Pengeluaran (termasuk MADRASAH Umum)
+    'pengeluaran': [
+        { value: 'MADRASAH', label: 'MADRASAH (Umum)' },
+        { value: 'PAUDQu', label: 'PAUDQu' },
+        { value: 'TPQ', label: 'TPQ' },
+        { value: 'MDT', label: 'MDT' }
+    ]
+};
+
+const typeKey = typeof type !== 'undefined' ? type : 'form_baru';
+const selectOptions = optionsMap[typeKey] || optionsMap['form_baru'];
+const nameAttr = typeof name !== 'undefined' ? name : 'pendidikan';
+const idAttr = typeof id !== 'undefined' ? id : '';
+const classAttr = typeof className !== 'undefined' ? className : 'form-control filter-select';
+const requiredAttr = typeof required !== 'undefined' && required ? 'required' : '';
+const placeholderText = typeof placeholder !== 'undefined' ? placeholder : '';
+const selectedVal = typeof selectedValue !== 'undefined' ? selectedValue : '';
+%>
+<select name="<%= nameAttr %>" <%- idAttr ? `id="${idAttr}"` : '' %> class="<%= classAttr %>" <%- requiredAttr %> <%- typeof style !== 'undefined' ? `style="${style}"` : '' %>>
+    <% if (placeholderText) { %>
+        <option value=""><%= placeholderText %></option>
+    <% } %>
+    <% selectOptions.forEach(opt => { %>
+        <option value="<%= opt.value %>" <%= selectedVal === opt.value ? 'selected' : '' %>><%= opt.label %></option>
+    <% }) %>
+</select>

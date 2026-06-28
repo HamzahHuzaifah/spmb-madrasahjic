@@ -3,6 +3,7 @@ const router = express.Router();
 
 const landingController = require('../controllers/public/landingController');
 const pendaftaranController = require('../controllers/public/pendaftaranController');
+const pembayaranController = require('../controllers/public/pembayaranController');
 const { pendaftaranLimiter } = require('../middlewares/rateLimiter');
 
 // Landing Page
@@ -22,5 +23,9 @@ router.post('/daftar/beasiswa', pendaftaranLimiter, pendaftaranController.postFo
 
 // Sukses
 router.get('/daftar/sukses', landingController.getSukses);
+
+// Info Pembayaran
+router.get('/info-pembayaran', pembayaranController.getFormPembayaran);
+router.post('/info-pembayaran', pendaftaranLimiter, pembayaranController.cekPembayaran);
 
 module.exports = router;

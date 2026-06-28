@@ -1,40 +1,48 @@
 <div class="sidebar">
     <div class="sidebar-header">
-        <div class="logo">JIC</div>
-        <h2>SPMB JIC 2026</h2>
+        <div class="logo">MJIC</div>
+        <h2>Keuangan Madrasah JIC</h2>
     </div>
     <div class="sidebar-menu">
-        <a href="/dashboard" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'dashboard') ? 'active' : '' %>">
-            <i class="fas fa-home"></i> Dashboard
-        </a>
-        <a href="/input-transaksi" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'input-transaksi') ? 'active' : '' %>">
-            <i class="fas fa-plus-circle"></i> Input Transaksi
-        </a>
-        <a href="/laporan" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'laporan') ? 'active' : '' %>">
-            <i class="fas fa-chart-bar"></i> Laporan Utama
-        </a>
-        
-        <div style="padding: 15px 24px 5px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Santri Baru</div>
-        <a href="/santri" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'santri') ? 'active' : '' %>">
-            <i class="fas fa-user-graduate"></i> Data Santri
-        </a>
-        <a href="/tagihan" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'tagihan') ? 'active' : '' %>">
-            <i class="fas fa-file-invoice-dollar"></i> Tagihan
-        </a>
-        <a href="/tunggakan" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'tunggakan') ? 'active' : '' %>">
-            <i class="fas fa-exclamation-circle"></i> Tunggakan
-        </a>
-        
-        <div style="padding: 15px 24px 5px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;">Daftar Ulang</div>
-        <a href="/santri-daftar-ulang" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'santri-daftar-ulang') ? 'active' : '' %>">
-            <i class="fas fa-users"></i> Data Santri
-        </a>
-        <a href="/tagihan-daftar-ulang" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'tagihan-daftar-ulang') ? 'active' : '' %>">
-            <i class="fas fa-file-invoice-dollar"></i> Tagihan
-        </a>
-        <a href="/tunggakan-daftar-ulang" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === 'tunggakan-daftar-ulang') ? 'active' : '' %>">
-            <i class="fas fa-exclamation-circle"></i> Tunggakan
-        </a>
+        <%
+          const menuSections = [
+            {
+              title: null,
+              items: [
+                { href: '/dashboard', page: 'dashboard', icon: 'fas fa-home', text: 'Dashboard' },
+                { href: '/input-transaksi', page: 'input-transaksi', icon: 'fas fa-plus-circle', text: 'Input Transaksi' },
+                { href: '/laporan', page: 'laporan', icon: 'fas fa-chart-bar', text: 'Laporan Utama' }
+              ]
+            },
+            {
+              title: 'Santri Baru',
+              items: [
+                { href: '/santri', page: 'santri', icon: 'fas fa-user-graduate', text: 'Data Santri' },
+                { href: '/tagihan', page: 'tagihan', icon: 'fas fa-file-invoice-dollar', text: 'Tagihan' },
+                { href: '/tunggakan', page: 'tunggakan', icon: 'fas fa-exclamation-circle', text: 'Tunggakan' }
+              ]
+            },
+            {
+              title: 'Daftar Ulang',
+              items: [
+                { href: '/santri-daftar-ulang', page: 'santri-daftar-ulang', icon: 'fas fa-users', text: 'Data Santri' },
+                { href: '/tagihan-daftar-ulang', page: 'tagihan-daftar-ulang', icon: 'fas fa-file-invoice-dollar', text: 'Tagihan' },
+                { href: '/tunggakan-daftar-ulang', page: 'tunggakan-daftar-ulang', icon: 'fas fa-exclamation-circle', text: 'Tunggakan' }
+              ]
+            }
+          ];
+        %>
+
+        <% menuSections.forEach(section => { %>
+            <% if (section.title) { %>
+                <div style="padding: 15px 24px 5px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px;"><%= section.title %></div>
+            <% } %>
+            <% section.items.forEach(item => { %>
+                <a href="<%= item.href %>" class="menu-item <%= (typeof activePage !== 'undefined' && activePage === item.page) ? 'active' : '' %>">
+                    <i class="<%= item.icon %>"></i> <%= item.text %>
+                </a>
+            <% }) %>
+        <% }) %>
 
         <!-- Tombol Logout -->
         <div style="margin-top: 30px; padding: 0 24px 24px;">
@@ -44,3 +52,4 @@
         </div>
     </div>
 </div>
+

@@ -1,0 +1,19 @@
+<%
+const nameAttr = typeof name !== 'undefined' ? name : 'agama';
+const idAttr = typeof id !== 'undefined' ? id : '';
+const classAttr = typeof className !== 'undefined' ? className : 'form-input';
+const requiredAttr = typeof required !== 'undefined' && required ? 'required' : '';
+const selectedVal = typeof selectedValue !== 'undefined' ? selectedValue : 'Islam';
+const placeholderText = typeof placeholder !== 'undefined' ? placeholder : '-- Pilih Agama --';
+%>
+<select name="<%= nameAttr %>" <%- idAttr ? `id="${idAttr}"` : '' %> class="<%= classAttr %>" <%- requiredAttr %>>
+    <% if (placeholderText) { %>
+        <option value=""><%= placeholderText %></option>
+    <% } %>
+    <option value="Islam" <%= selectedVal === 'Islam' ? 'selected' : '' %>>Islam</option>
+    <option value="Kristen" <%= selectedVal === 'Kristen' ? 'selected' : '' %>>Kristen</option>
+    <option value="Katolik" <%= selectedVal === 'Katolik' ? 'selected' : '' %>>Katolik</option>
+    <option value="Hindu" <%= selectedVal === 'Hindu' ? 'selected' : '' %>>Hindu</option>
+    <option value="Buddha" <%= selectedVal === 'Buddha' ? 'selected' : '' %>>Buddha</option>
+    <option value="Konghucu" <%= selectedVal === 'Konghucu' ? 'selected' : '' %>>Konghucu</option>
+</select>

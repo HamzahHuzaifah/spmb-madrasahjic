@@ -27,6 +27,26 @@ class TagihanModel {
         return rows;
     }
 
+    static async getAllTagihanFiltered(search = '', pendidikan = '') {
+        let query = 'SELECT * FROM tagihan WHERE 1=1';
+        let params = [];
+
+        if (search) {
+            query += ' AND nama LIKE ?';
+            params.push(`%${search}%`);
+        }
+        
+        if (pendidikan) {
+            query += ' AND satuanPendidikan LIKE ?';
+            params.push(`${pendidikan}%`);
+        }
+
+        query += ` ORDER BY id DESC`;
+        
+        const [rows] = await db.execute(query, params);
+        return rows;
+    }
+
     static async getTotalTagihan(search = '', pendidikan = '') {
         let query = 'SELECT COUNT(*) as total FROM tagihan WHERE 1=1';
         let params = [];
@@ -153,6 +173,26 @@ class TagihanModel {
         }
 
         query += ` ORDER BY id DESC LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
+        
+        const [rows] = await db.execute(query, params);
+        return rows;
+    }
+
+    static async getAllTagihanDaftarUlangFiltered(search = '', pendidikan = '') {
+        let query = 'SELECT * FROM tagihan_daftar_ulang WHERE 1=1';
+        let params = [];
+
+        if (search) {
+            query += ' AND nama LIKE ?';
+            params.push(`%${search}%`);
+        }
+        
+        if (pendidikan) {
+            query += ' AND satuanPendidikan LIKE ?';
+            params.push(`${pendidikan}%`);
+        }
+
+        query += ` ORDER BY id DESC`;
         
         const [rows] = await db.execute(query, params);
         return rows;

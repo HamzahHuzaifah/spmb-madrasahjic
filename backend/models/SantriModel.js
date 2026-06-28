@@ -28,6 +28,26 @@ class SantriModel {
         return rows;
     }
 
+    static async getAllSantriFiltered(search = '', pendidikan = '') {
+        let query = 'SELECT * FROM santri WHERE 1=1';
+        let params = [];
+
+        if (search) {
+            query += ' AND nama LIKE ?';
+            params.push(`%${search}%`);
+        }
+        
+        if (pendidikan) {
+            query += ' AND pendidikan LIKE ?';
+            params.push(`${pendidikan}%`);
+        }
+
+        query += ` ORDER BY id DESC`;
+        
+        const [rows] = await db.execute(query, params);
+        return rows;
+    }
+
     static async getTotalSantri(search = '', pendidikan = '') {
         let query = 'SELECT COUNT(*) as total FROM santri WHERE 1=1';
         let params = [];
@@ -53,6 +73,11 @@ class SantriModel {
 
     static async getSantriByName(nama) {
         const [rows] = await db.execute('SELECT * FROM santri WHERE nama = ?', [nama]);
+        return rows[0];
+    }
+
+    static async getSantriByNomorPendaftaran(nomorPendaftaran) {
+        const [rows] = await db.execute('SELECT * FROM santri WHERE nomorPendaftaran = ?', [nomorPendaftaran]);
         return rows[0];
     }
 
@@ -162,6 +187,26 @@ class SantriModel {
         return rows;
     }
 
+    static async getAllSantriDaftarUlangFiltered(search = '', pendidikan = '') {
+        let query = 'SELECT * FROM santri_daftar_ulang WHERE 1=1';
+        let params = [];
+
+        if (search) {
+            query += ' AND nama LIKE ?';
+            params.push(`%${search}%`);
+        }
+        
+        if (pendidikan) {
+            query += ' AND lanjutKe LIKE ?';
+            params.push(`${pendidikan}%`);
+        }
+
+        query += ` ORDER BY id DESC`;
+        
+        const [rows] = await db.execute(query, params);
+        return rows;
+    }
+
     static async getTotalSantriDaftarUlang(search = '', pendidikan = '') {
         let query = 'SELECT COUNT(*) as total FROM santri_daftar_ulang WHERE 1=1';
         let params = [];
@@ -187,6 +232,11 @@ class SantriModel {
 
     static async getSantriDaftarUlangByName(nama) {
         const [rows] = await db.execute('SELECT * FROM santri_daftar_ulang WHERE nama = ?', [nama]);
+        return rows[0];
+    }
+
+    static async getSantriDaftarUlangByNomorPendaftaran(nomorPendaftaran) {
+        const [rows] = await db.execute('SELECT * FROM santri_daftar_ulang WHERE nomorPendaftaran = ?', [nomorPendaftaran]);
         return rows[0];
     }
 

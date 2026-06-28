@@ -10,7 +10,7 @@
             document.getElementById('m_nama').value = data.nama || '';
             document.getElementById('m_namaPanggilan').value = data.namaPanggilan || '';
             document.getElementById('m_jenisKelamin').value = data.jenisKelamin || 'Laki-laki';
-            document.getElementById('m_pendidikan').value = data.pendidikan || 'PAUDQu A';
+            document.getElementById('m_tingkatPendidikan').value = data.pendidikan || 'PAUDQu A';
             document.getElementById('m_tempatLahir').value = data.tempatLahir || '';
             if(data.tanggalLahir) {
                 const dateObj = new Date(data.tanggalLahir);
@@ -36,6 +36,19 @@
             document.getElementById('m_teleponIbu').value = data.teleponIbu || '';
 
             document.getElementById('m_alamat').value = data.alamat || '';
+
+            // Update Select2 UI if initialized
+            $('#m_tingkatPendidikan, #m_jalurPendaftaran, #m_agama, #m_statusKeluarga').each(function() {
+                if ($(this).hasClass('select2-hidden-accessible')) {
+                    $(this).trigger('change');
+                }
+            });
+
+            // Update Flatpickr UI if initialized
+            const dateInput = document.getElementById('m_tanggalLahir');
+            if (dateInput && dateInput._flatpickr) {
+                dateInput._flatpickr.setDate(dateInput.value);
+            }
 
             document.getElementById('santriModal').style.display = 'block';
         }
@@ -67,7 +80,6 @@
             var modal = document.getElementById('santriModal');
             var addModal = document.getElementById('addSantriModal');
             var addBeasiswaModal = document.getElementById('addSantriBeasiswaModal');
-            var deleteModal = document.getElementById('deleteModal');
             if (event.target == modal) {
                 modal.style.display = "none";
             }
@@ -77,18 +89,6 @@
             if (addBeasiswaModal && event.target == addBeasiswaModal) {
                 addBeasiswaModal.style.display = "none";
             }
-            if (event.target == deleteModal) {
-                deleteModal.style.display = "none";
-            }
-        }
-
-        function openDeleteModal(actionUrl) {
-            document.getElementById('deleteForm').action = actionUrl;
-            document.getElementById('deleteModal').style.display = 'block';
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').style.display = 'none';
         }
 
         function fillTestingDataSantri(isBeasiswa = false) {
@@ -115,16 +115,25 @@
                 else if (input.name === 'dariBersaudara') input.value = '2';
             });
 
-            const dateInputs = modal.querySelectorAll('input[type="date"]');
-            dateInputs.forEach(input => {
-                if (input.name === 'tanggalLahir') input.value = '2015-01-01';
-            });
+            const tanggalLahirInput = modal.querySelector('input[name="tanggalLahir"]');
+            if (tanggalLahirInput) {
+                if (tanggalLahirInput._flatpickr) {
+                    tanggalLahirInput._flatpickr.setDate('2015-01-01');
+                } else {
+                    tanggalLahirInput.value = '2015-01-01';
+                }
+            }
 
             const selects = modal.querySelectorAll('select');
             selects.forEach(select => {
                 if (select.name === 'pendidikan') select.value = 'TPQ A';
                 else if (select.name === 'agama') select.value = 'Islam';
                 else if (select.name === 'statusKeluarga') select.value = 'Anak Kandung';
+                
+                // Trigger change for Select2 to update UI
+                if ($(select).hasClass('select2-hidden-accessible')) {
+                    $(select).trigger('change');
+                }
             });
 
             const radios = modal.querySelectorAll('input[type="radio"]');
@@ -135,46 +144,4 @@
                 });
             }
         }
-
-async function handleAjaxSubmit(event, formElement) {
-                event.preventDefault();
-                const submitBtn = formElement.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-                submitBtn.disabled = true;
-
-                const formData = new FormData(formElement);
-                const data = Object.fromEntries(formData.entries());
-
-                if (data.jenisKelaminBeasiswa) {
-                    data.jenisKelamin = data.jenisKelaminBeasiswa;
-                    delete data.jenisKelaminBeasiswa;
-                }
-
-                try {
-                    const response = await fetch(formElement.action, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-
-                    if (result.success) {
-                        formElement.closest('.modal').style.display = 'none';
-                        const successModal = document.getElementById('successModal');
-                        if (result.noRef) {
-                            document.getElementById('successNoRef').innerText = result.noRef;
-                            document.getElementById('successNoRefContainer').style.display = 'block';
-                        }
-                        successModal.style.display = 'block';
-                    } else {
-                        alert('Terjadi kesalahan saat menyimpan data.');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Gagal menghubungi server.');
-                } finally {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }
-            }
+

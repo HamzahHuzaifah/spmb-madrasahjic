@@ -1,0 +1,109 @@
+<div style="background-color: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+    <% if (type === 'beasiswa') { %>
+        <h3 style="margin-bottom: 15px; color: var(--text-main);">Selamat Datang di Jalur Beasiswa!</h3>
+        <p style="margin-bottom: 15px; font-size: 14px; line-height: 1.6;">Assalamualaikum warahmatullahi
+            wabarakatuh,<br><br>Madrasah Jakarta Islamic Centre menyediakan berbagai opsi beasiswa untuk membantu
+            meringankan biaya pendidikan bagi santri yang berhak. Silahkan Anda mengisi formulir pendaftaran berikut
+            untuk memulai pendaftaran di jalur beasiswa yang sesuai.</p>
+    <% } else if (type === 'ulang') { %>
+        <h3 style="margin-bottom: 15px; color: var(--text-main);">Selamat Datang!</h3>
+        <p style="margin-bottom: 15px; font-size: 14px; line-height: 1.6;">Assalamualaikum warahmatullahi
+            wabarakatuh,<br><br>Selamat Datang!<br>Terima kasih atas kepercayaan Anda untuk tetap menjadi bagian dari
+            Madrasah Jakarta Islamic Centre. Kami memiliki tujuan untuk menjadi sekolah sekaligus komunitas pembelajaran
+            yang menghasilkan generasi qur'ani yang cerdas, mandiri, kreatif dan berwawasan luas.<br><br>Silahkan Anda
+            mengisi formulir pendaftaran berikut untuk memulai PENDAFTARAN MELANJUTKAN KE JENJANG BERIKUTNYA!</p>
+    <% } else { %>
+        <h3 style="margin-bottom: 15px; color: var(--text-main);">Selamat Datang!</h3>
+        <p style="margin-bottom: 15px; font-size: 14px; line-height: 1.6;">Assalamualaikum warahmatullahi
+            wabarakatuh,<br><br>Terima kasih atas minat Anda untuk menjadi bagian dari Madrasah Jakarta Islamic Centre.
+            Kami memiliki tujuan untuk menjadi sekolah sekaligus komunitas pembelajaran yang menghasilkan generasi
+            qur'ani yang cerdas, mandiri, kreatif dan berwawasan luas.<br><br>Silahkan Anda mengisi formulir pendaftaran
+            berikut untuk memulai PENDAFTARAN!</p>
+    <% } %>
+
+    <h4 style="margin-top: 25px; margin-bottom: 10px; color: var(--text-main);">SYARAT & KETENTUAN PENDAFTARAN<%= type === 'beasiswa' ? ' BEASISWA' : '' %></h4>
+    <p style="margin-bottom: 15px; font-size: 14px; line-height: 1.6;">Harap membaca ketentuan berikut dengan
+        seksama sebelum mengisi<%= type === 'beasiswa' ? '' : ' dan mengirimkan' %> aplikasi pendaftaran Anda.<%= type === 'beasiswa' ? '' : ' Saat Anda mengirimkan aplikasi pendaftaran Anda, Anda berarti telah menyetujui seluruh syarat dan ketentuan berikut.' %></p>
+
+    <div style="max-height: 200px; overflow-y: auto; background: var(--bg-main); padding: 15px; border-radius: 4px; font-size: 13px; line-height: 1.6; border: 1px solid var(--border);">
+        <% if (type === 'beasiswa') { %>
+            <p><strong>[ KETENTUAN BEASISWA ]</strong><br>
+                1. Calon santri yang mendaftar melalui jalur beasiswa wajib melampirkan dokumen pendukung asli saat
+                proses verifikasi (seperti SKTM, Akta Kematian untuk Yatim, dll).<br>
+                2. Pihak Panitia SPMB berhak melakukan survei atau membatalkan status beasiswa apabila data yang
+                diberikan terbukti tidak valid.<br>
+                3. Ketentuan biaya dan potongan diatur lebih lanjut dalam kebijakan sekolah.</p>
+        <% } else { %>
+            <p><strong>[ A. KETENTUAN UMUM ]</strong><br>
+                Proses pendaftaran SPMB Madrasah Jakarta Islamic Centre dimulai setelah Anda melengkapi formulir singkat
+                pada formulir SPMB yang telah kami berikan.<br><br>
+                Biaya pendaftaran dibayarkan melalui bank transfer pada rekening yang telah ditentukan. Sertakan bukti
+                pembayaran dalam formulir pendaftaran di bawah ini.<br><br>
+                Semua biaya pendaftaran yang sudah dibayarkan tidak dapat ditarik kembali/dikembalikan atau dialihkan
+                untuk pembayaran lainnya.</p>
+
+            <hr style="border: 0; border-top: 1px dashed var(--border); margin: 15px 0;">
+
+            <p><strong>[ B. INFORMASI UMUM ]</strong><br>
+                Saat orang tua/wali sah mengisi Formulir Pendaftaran, Madrasah Jakarta Islamic Centre akan mengumpulkan
+                berbagai informasi pribadi tentang orang tua/wali sah dan anak.<br><br>
+                Informasi yang telah dibagikan oleh orang tua/wali resmi kepada Madrasah Jakarta Islamic Centre melalui
+                pendaftaran atau email ini akan digunakan oleh Madrasah Jakarta Islamic Centre untuk memenuhi komitmen
+                layanan kami kepada Anda. Kami tidak membagikan informasi pribadi Anda kepada orang atau organisasi
+                manapun, dan pihak ketiga tidak diizinkan untuk menggunakan informasi pribadi Anda untuk tujuan mereka
+                sendiri.<br><br>
+                Setiap informasi yang salah, tidak akurat atau menyesatkan yang diberikan pada Formulir Pendaftaran
+                dan/atau dokumen pendukung lainnya dapat menyebabkan penolakan pendaftaran.<br><br>
+                Orang tua/wali yang sah harus setiap saat menginformasikan kepada Madrasah Jakarta Islamic Centre
+                tentang setiap perubahan informasi yang diberikan dalam formulir pendaftaran secara tertulis kepada
+                pihak administrasi keanggotaan sekolah, di mana anak tersebut telah terdaftar sebagai santri di sistem
+                Madrasah Jakarta Islamic Centre.<br><br>
+                Semua pemberitahuan, surat dan korespondensi dari Madrasah Jakarta Islamic Centre akan dikirim ke orang
+                tua/wali yang sah di alamat yang diberikan dalam Formulir Pendaftaran dan akan dianggap cukup dilayani
+                jika dikirim melalui pos biasa, email atau diserahkan ke anak.</p>
+
+            <hr style="border: 0; border-top: 1px dashed var(--border); margin: 15px 0;">
+
+            <p><strong>[ C. BIAYA PENDAFTARAN & PROSES PENERIMAAN ]</strong><br>
+                Proses pendaftaran calon santri baru akan dimulai setelah Formulir Pendaftaran diserahkan ke Madrasah
+                Jakarta Islamic Centre melalui formulir ini oleh Panitia SPMB Madrasah Jakarta Islamic Centre.<br><br>
+                Semua biaya yang telah dibayarkan tidak dapat dikembalikan atau ditransfer ke pembayaran lain terkecuali
+                syarat dan ketentuan berlaku.<br><br>
+                Madrasah Jakarta Islamic Centre dapat membatalkan pendaftaran Anda jika ada pembayaran terutang terkait
+                anak Anda.<br><br>
+                Jika pendaftaran dibatalkan, semua proses pengajuan/pendaftaran ulang akan dianggap sebagai aplikasi
+                baru. Proses aplikasi baru akan ditempatkan dalam antrian lagi di tingkat kelas dan tahun akademik yang
+                sesuai.<br><br>
+                Keputusan penerimaan santri adalah kebijakan mutlak pihak Madrasah Jakarta Islamic Centre. Madrasah
+                Jakarta Islamic Centre pada umumnya mempertimbangkan berbagai faktor, antara lain usia anak, kemampuan
+                akademik, dan perilaku anak serta visi & misi orang tua/wali yang sah.<br><br>
+                Santri tidak boleh memulai tahun akademik kecuali biaya pendidikan telah dibayarkan secara
+                penuh.<br><br>
+                Pendaftaran ulang untuk santri yang melanjutkan tidak akan diterima kecuali semua biaya terutang telah
+                dibayar.</p>
+
+            <hr style="border: 0; border-top: 1px dashed var(--border); margin: 15px 0;">
+
+            <p><strong>[ D. PENERIMAAN SANTRI ]</strong><br>
+                Formulir Pendaftaran yang telah diisi adalah sebagai bukti anak anda akan mengikuti Observasi. Setelah
+                Anda diberi tahu tentang hasil observasi anak Anda dan biaya pendaftaran telah dilunasi, akan ada
+                kontrak yang mengikat antara Madrasah Jakarta Islamic Centre dan orang tua/wali yang sah, dengan
+                ketentuan bahwa seluruh peraturan yang berlaku di Madrasah Jakarta Islamic Centre telah
+                dipatuhi.<br><br>
+                Dengan memberi kami izin ini, ini memungkinkan kami untuk memberi Anda berita dan layanan terbaru yang
+                kami kembangkan saat ini atau di masa depan.<br><br>
+                Atas perhatian Bapak/Ibu kami sampaikan terima kasih.<br><br>
+                Wassalamualaikum warahmatullahi wabarakatuh.<br><br>
+                Salam Hormat,<br>
+                Panitia SPMB<br>
+                Madrasah Jakarta Islamic Centre</p>
+        <% } %>
+    </div>
+
+    <div class="form-group" style="margin-top: 15px;">
+        <label class="radio-label" style="font-weight: 500; color: var(--primary);">
+            <input type="checkbox" name="setujuSK" required> Saya telah membaca dan menyetujui seluruh Syarat &
+            Ketentuan pendaftaran di atas.
+        </label>
+    </div>
+</div>

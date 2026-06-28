@@ -180,14 +180,7 @@ function handleJenisTransaksi() {
     }
 }
 
-function openDeleteModal(actionUrl) {
-    document.getElementById('deleteForm').action = actionUrl;
-    document.getElementById('deleteModal').style.display = 'block';
-}
 
-function closeDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'none';
-}
 
 function openEditModal(id, tanggal, nominal, metode) {
     document.getElementById('editTransaksiForm').action = '/input-transaksi/edit/' + id;
@@ -202,12 +195,46 @@ function closeEditModal() {
 }
 
 window.onclick = function(event) {
-    var deleteModal = document.getElementById('deleteModal');
     var editModal = document.getElementById('editModal');
-    if (event.target == deleteModal) {
-        deleteModal.style.display = "none";
-    }
     if (event.target == editModal) {
         editModal.style.display = "none";
     }
 }
+
+function openDeleteModal(actionUrl) {
+    Swal.fire({
+        title: 'Konfirmasi Hapus',
+        text: 'Apakah Anda yakin ingin menghapus data ini? Nominal tagihan santri akan dikembalikan seperti semula.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Hapus Data',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = actionUrl;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+
+function openKwitansiModal(trxId) {
+    document.getElementById("kwitansiIframe").src = "/kwitansi/" + trxId;
+    document.getElementById("kwitansiModal").style.display = "block";
+}
+
+function closeKwitansiModal() {
+    document.getElementById("kwitansiModal").style.display = "none";
+    document.getElementById("kwitansiIframe").src = "";
+}
+
+setTimeout(() => {
+    const s = document.getElementById("successAlert");
+    if(s) s.style.display="none";
+    const e = document.getElementById("errorAlert");
+    if(e) e.style.display="none";
+}, 4000);

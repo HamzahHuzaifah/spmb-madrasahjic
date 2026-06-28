@@ -1,0 +1,27 @@
+<% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 10px 0; border-top: 1px solid #eee;">
+        <div style="color: #666; font-size: 14px;">
+            Menampilkan Halaman <strong><%= currentPage %></strong> dari <strong><%= totalPages %></strong> 
+            (Total: <%= totalData %> Data)
+        </div>
+        <div style="display: flex; gap: 5px;">
+            <% if (currentPage > 1) { %>
+                <a href="<%= baseUrl %>?page=<%= currentPage - 1 %><%= typeof queryParams !== 'undefined' ? queryParams : '' %>" class="btn btn-secondary" style="padding: 5px 12px; text-decoration: none;">&laquo; Prev</a>
+            <% } %>
+
+            <% 
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            for(let i = startPage; i <= endPage; i++) { 
+            %>
+                <a href="<%= baseUrl %>?page=<%= i %><%= typeof queryParams !== 'undefined' ? queryParams : '' %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-secondary' %>" style="padding: 5px 12px; text-decoration: none;">
+                    <%= i %>
+                </a>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+                <a href="<%= baseUrl %>?page=<%= currentPage + 1 %><%= typeof queryParams !== 'undefined' ? queryParams : '' %>" class="btn btn-secondary" style="padding: 5px 12px; text-decoration: none;">Next &raquo;</a>
+            <% } %>
+        </div>
+    </div>
+<% } %>

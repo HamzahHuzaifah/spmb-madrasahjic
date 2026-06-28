@@ -1,0 +1,38 @@
+<% 
+const type = typeof modalType !== 'undefined' ? modalType : 'baru'; 
+const noRefTitle = type === 'baru' ? 'Nomor Pendaftaran Anda:' : 'Nomor Pendaftaran Terinput:';
+%>
+<div id="successModal" class="modal">
+    <div class="modal-content" style="max-width: 600px; text-align: center; padding: 50px 30px;">
+        <div style="font-size: 60px; color: var(--success); margin-bottom: 20px;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        
+        <h2>Pendaftaran Berhasil Disimpan!</h2>
+        
+        <div id="successNoRefContainer" style="display: none; background-color: #e8f5e9; padding: 20px; border-radius: 8px; border: 2px solid #4caf50; margin-bottom: 25px; text-align: center;">
+            <h3 style="color: #2e7d32; margin-bottom: 5px; font-size: 16px;"><%= noRefTitle %></h3>
+            <div id="successNoRef" style="font-size: 26px; font-weight: bold; color: #1b5e20; letter-spacing: 1px;"></div>
+            <p style="margin-top: 10px; font-size: 14px; color: #388e3c; margin-bottom: 0;">Harap simpan nomor pendaftaran ini untuk keperluan selanjutnya.</p>
+        </div>
+        
+        <% if (type === 'baru') { %>
+        <p style="color: var(--text-muted); margin-bottom: 30px; font-size: 16px;">
+            Terima kasih telah mendaftar di SPMB JIC Tahun Ajaran 2026/2027. Data Anda telah kami terima dan akan segera diproses oleh panitia.
+        </p>
+        <% } %>
+        
+        <div style="background-color: #f8fbf8; padding: 20px; border-radius: 8px; border: 1px dashed var(--primary); margin-bottom: 30px; display: inline-block; text-align: left;">
+            <h4 style="color: var(--primary); margin-bottom: 10px;">Langkah Selanjutnya:</h4>
+            <ul style="color: var(--text-main); margin-left: 20px; line-height: 1.6;">
+                <li>Siapkan dokumen fisik yang telah Anda baca pada formulir pendaftaran beasiswa yang telah anda pilih</li>
+                <li>Tunggu pesan konfirmasi dari panitia via WhatsApp.</li>
+                <li>Silakan datang ke kantor JIC untuk verifikasi dokumen atau pembayaran administrasi jika di perlukan.</li>
+            </ul>
+        </div>
+        
+        <div>
+            <button onclick="document.getElementById('successModal').style.display='none'; window.location.reload();" class="btn btn-primary" style="padding: 10px 30px; border-radius: 6px; font-weight: bold;">Tutup & Kembali</button>
+        </div>
+    </div>
+</div>

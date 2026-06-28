@@ -7,7 +7,7 @@ class TransaksiModel {
         return rows;
     }
 
-    static async getTransaksiPaginated(limit, offset, search, filterTanggal, filterPendidikan) {
+    static async getTransaksiPaginated(limit, offset, search, filterTanggal, filterJenis) {
         let query = 'SELECT * FROM transaksi WHERE 1=1';
         let params = [];
 
@@ -21,9 +21,9 @@ class TransaksiModel {
             params.push(filterTanggal.start, filterTanggal.end);
         }
 
-        if (filterPendidikan) {
-            query += ' AND satuanPendidikan LIKE ?';
-            params.push(`${filterPendidikan}%`);
+        if (filterJenis) {
+            query += ' AND jenis = ?';
+            params.push(filterJenis);
         }
 
         query += ' ORDER BY id DESC LIMIT ? OFFSET ?';
@@ -33,7 +33,7 @@ class TransaksiModel {
         return rows;
     }
 
-    static async getTotalTransaksi(search, filterTanggal, filterPendidikan) {
+    static async getTotalTransaksi(search, filterTanggal, filterJenis) {
         let query = 'SELECT COUNT(*) as total FROM transaksi WHERE 1=1';
         let params = [];
 
@@ -47,13 +47,38 @@ class TransaksiModel {
             params.push(filterTanggal.start, filterTanggal.end);
         }
 
-        if (filterPendidikan) {
-            query += ' AND satuanPendidikan LIKE ?';
-            params.push(`${filterPendidikan}%`);
+        if (filterJenis) {
+            query += ' AND jenis = ?';
+            params.push(filterJenis);
         }
 
         const [rows] = await db.execute(query, params);
         return rows[0].total;
+    }
+
+    static async getAllTransaksiFiltered(search, filterTanggal, filterJenis) {
+        let query = 'SELECT * FROM transaksi WHERE 1=1';
+        let params = [];
+
+        if (search) {
+            query += ' AND (namaSantri LIKE ? OR noTransaksi LIKE ?)';
+            params.push(`%${search}%`, `%${search}%`);
+        }
+        
+        if (filterTanggal && filterTanggal.start && filterTanggal.end) {
+            query += ' AND tanggal BETWEEN ? AND ?';
+            params.push(filterTanggal.start, filterTanggal.end);
+        }
+
+        if (filterJenis) {
+            query += ' AND jenis = ?';
+            params.push(filterJenis);
+        }
+
+        query += ' ORDER BY id DESC';
+
+        const [rows] = await db.execute(query, params);
+        return rows;
     }
 
     static async getTransaksiById(id) {
@@ -103,7 +128,17 @@ class TransaksiModel {
                 rincianNames = COALESCE(?, rincianNames),
                 rincianNominals = COALESCE(?, rincianNominals),
                 diterimaDari = COALESCE(?, diterimaDari),
-                namaPemberi = COALESCE(?, namaPemberi)
+                namaPemberi = COALESCE(?, namaPemberi),
+                docTitle = COALESCE(?, docTitle),
+                diterimaDariPembayaran = COALESCE(?, diterimaDariPembayaran),
+                dibayarkanKepadaSign = COALESCE(?, dibayarkanKepadaSign),
+                layoutMarginTop = COALESCE(?, layoutMarginTop),
+                layoutMarginLeft = COALESCE(?, layoutMarginLeft),
+                ttdVisible = COALESCE(?, ttdVisible),
+                ttdWidth = COALESCE(?, ttdWidth),
+                ttdX = COALESCE(?, ttdX),
+                ttdY = COALESCE(?, ttdY),
+                rowOrder = COALESCE(?, rowOrder)
             WHERE id = ?
         `;
         const values = [
@@ -112,6 +147,9 @@ class TransaksiModel {
             data.rincianNames !== undefined ? (typeof data.rincianNames === 'string' ? data.rincianNames : JSON.stringify(data.rincianNames)) : null, 
             data.rincianNominals !== undefined ? (typeof data.rincianNominals === 'string' ? data.rincianNominals : JSON.stringify(data.rincianNominals)) : null, 
             data.diterimaDari !== undefined ? data.diterimaDari : null, data.namaPemberi !== undefined ? data.namaPemberi : null,
+            data.docTitle !== undefined ? data.docTitle : null, data.diterimaDariPembayaran !== undefined ? data.diterimaDariPembayaran : null, data.dibayarkanKepadaSign !== undefined ? data.dibayarkanKepadaSign : null,
+            data.layoutMarginTop !== undefined ? data.layoutMarginTop : null, data.layoutMarginLeft !== undefined ? data.layoutMarginLeft : null, data.ttdVisible !== undefined ? data.ttdVisible : null,
+            data.ttdWidth !== undefined ? data.ttdWidth : null, data.ttdX !== undefined ? data.ttdX : null, data.ttdY !== undefined ? data.ttdY : null, data.rowOrder !== undefined ? data.rowOrder : null,
             id
         ];
         await db.execute(query, values);

@@ -21,3 +21,42 @@
         max-width: 800px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
+    
+    /* Specific styles for Kwitansi Modal */
+    #kwitansiModal .modal-content {
+        max-width: 900px;
+        width: 95%;
+        padding: 20px;
+        height: 90vh; /* Make it almost full height */
+        display: flex;
+        flex-direction: column;
+    }
+
+    #kwitansiModal .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    
+    #kwitansiModal .modal-header h3 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    #kwitansiModal .modal-body {
+        flex: 1; /* Take up remaining height */
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    #kwitansiIframe {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        flex: 1;
+    }

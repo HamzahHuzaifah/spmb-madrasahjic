@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/kwitansi.css?v=5">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -481,17 +482,35 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
-                        window.location.reload(); // Refresh to reflect synced data (e.g. signatures syncing)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: data.message,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
                     } else {
-                        alert(data.message || 'Gagal menyimpan');
-                        resetEditMode();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.message || 'Gagal menyimpan',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            resetEditMode();
+                        });
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    alert('Terjadi kesalahan jaringan');
-                    resetEditMode();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan jaringan',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        resetEditMode();
+                    });
                 });
             }
         }

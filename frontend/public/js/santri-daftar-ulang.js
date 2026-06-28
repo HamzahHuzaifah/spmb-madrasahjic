@@ -40,6 +40,19 @@
             
             document.getElementById('m_alamat').value = data.alamat || '';
 
+            // Update Select2 UI if initialized
+            $('#m_unitSebelumnya, #m_lanjutKe, #m_jalurPendaftaran, #m_agama, #m_statusKeluarga').each(function() {
+                if ($(this).hasClass('select2-hidden-accessible')) {
+                    $(this).trigger('change');
+                }
+            });
+
+            // Update Flatpickr UI if initialized
+            const dateInput = document.getElementById('m_tanggalLahir');
+            if (dateInput && dateInput._flatpickr) {
+                dateInput._flatpickr.setDate(dateInput.value);
+            }
+
             // Set Action URL for form
             document.getElementById('editSantriForm').action = '/santri-daftar-ulang/edit/' + data.id;
 
@@ -53,16 +66,12 @@
         window.onclick = function (event) {
             var modal = document.getElementById('santriModal');
             var addModal = document.getElementById('addSantriModal');
-            var deleteModal = document.getElementById('deleteModal');
             var successModal = document.getElementById('successModal');
             if (event.target == modal) {
                 modal.style.display = "none";
             }
             if (event.target == addModal) {
                 addModal.style.display = "none";
-            }
-            if (event.target == deleteModal) {
-                deleteModal.style.display = "none";
             }
             if (event.target == successModal) {
                 successModal.style.display = "none";
@@ -76,15 +85,6 @@
 
         function closeAddSantriModal() {
             document.getElementById('addSantriModal').style.display = 'none';
-        }
-
-        function openDeleteModal(actionUrl) {
-            document.getElementById('deleteForm').action = actionUrl;
-            document.getElementById('deleteModal').style.display = 'block';
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').style.display = 'none';
         }
 
         function fillTestingDataDaftarUlang() {
@@ -109,17 +109,26 @@
                 else if (input.name === 'dariBersaudara') input.value = '2';
             });
 
-            const dateInputs = modal.querySelectorAll('input[type="date"]');
-            dateInputs.forEach(input => {
-                if (input.name === 'tanggalLahir') input.value = '2015-01-01';
-            });
+            const tanggalLahirInput = modal.querySelector('input[name="tanggalLahir"]');
+            if (tanggalLahirInput) {
+                if (tanggalLahirInput._flatpickr) {
+                    tanggalLahirInput._flatpickr.setDate('2015-01-01');
+                } else {
+                    tanggalLahirInput.value = '2015-01-01';
+                }
+            }
 
             const selects = modal.querySelectorAll('select');
             selects.forEach(select => {
-                if (select.name === 'pendidikanSebelumnya') select.value = 'PAUDQu B';
+                if (select.name === 'pendidikanSebelumnya' || select.name === 'unitSebelumnya') select.value = 'PAUDQu B';
                 else if (select.name === 'lanjutKe') select.value = 'TPQ A';
                 else if (select.name === 'agama') select.value = 'Islam';
                 else if (select.name === 'statusKeluarga') select.value = 'Anak Kandung';
+                
+                // Trigger change for Select2 to update UI
+                if ($(select).hasClass('select2-hidden-accessible')) {
+                    $(select).trigger('change');
+                }
             });
 
             const radios = modal.querySelectorAll('input[type="radio"]');
@@ -128,43 +137,5 @@
                     if (radio.value === 'Laki-laki') radio.checked = true;
                     if (radio.name === 'jalurPendaftaran' && radio.value === 'Reguler') radio.checked = true;
                 });
-            }
-        }
-
-        async function handleAjaxSubmit(event, formElement) {
-            event.preventDefault();
-            const submitBtn = formElement.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-            submitBtn.disabled = true;
-
-            const formData = new FormData(formElement);
-            const data = Object.fromEntries(formData.entries());
-            
-            try {
-                const response = await fetch(formElement.action, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
-                
-                if(result.success) {
-                    formElement.closest('.modal').style.display = 'none';
-                    const successModal = document.getElementById('successModal');
-                    if(result.noRef) {
-                        document.getElementById('successNoRef').innerText = result.noRef;
-                        document.getElementById('successNoRefContainer').style.display = 'block';
-                    }
-                    successModal.style.display = 'block';
-                } else {
-                    alert('Terjadi kesalahan saat menyimpan data.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Gagal menghubungi server.');
-            } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
             }
         }

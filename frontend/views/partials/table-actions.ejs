@@ -1,0 +1,28 @@
+<%
+  // Props:
+  // - type: 'santri' | 'tagihan'
+  // - item: Object
+  // - detailOnClick: String (optional, e.g. "openSantriModal(this)")
+  // - editOnClick: String (optional, e.g. "openTagihanModal(this)")
+  // - deleteUrl: String (optional, e.g. "/santri/delete/...")
+%>
+<div style="display: flex; gap: 5px;">
+    <% if (type === 'santri') { %>
+        <button type="button" class="btn btn-secondary"
+            style="padding: 5px 10px; font-size: 12px;"
+            data-santri="<%= JSON.stringify(item) %>"
+            onclick="<%= detailOnClick %>">Detail</button>
+        <% if (typeof deleteUrl !== 'undefined' && deleteUrl) { %>
+            <button type="button" class="btn btn-danger"
+                style="padding: 5px 10px; font-size: 12px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;"
+                onclick="confirmDelete('<%= deleteUrl %>')">Hapus</button>
+        <% } %>
+    <% } else if (type === 'tagihan') { %>
+        <button class="btn btn-secondary" 
+            style="padding: 5px 10px; font-size: 12px;" 
+            data-tagihan="<%= JSON.stringify(item) %>" 
+            onclick="<%= editOnClick %>">
+            <i class="fas fa-edit"></i> Edit
+        </button>
+    <% } %>
+</div>

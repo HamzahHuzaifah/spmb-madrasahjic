@@ -27,6 +27,26 @@ class TunggakanModel {
         return rows;
     }
 
+    static async getAllTunggakanFiltered(search = '', status = '') {
+        let query = 'SELECT * FROM tunggakan WHERE 1=1';
+        let params = [];
+
+        if (search) {
+            query += ' AND nama LIKE ?';
+            params.push(`%${search}%`);
+        }
+        
+        if (status) {
+            query += ' AND status = ?';
+            params.push(status);
+        }
+
+        query += ` ORDER BY id DESC`;
+        
+        const [rows] = await db.execute(query, params);
+        return rows;
+    }
+
     static async getTotalTunggakan(search = '', status = '') {
         let query = 'SELECT COUNT(*) as total FROM tunggakan WHERE 1=1';
         let params = [];
@@ -165,6 +185,26 @@ class TunggakanModel {
         }
 
         query += ` ORDER BY id DESC LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`;
+        
+        const [rows] = await db.execute(query, params);
+        return rows;
+    }
+
+    static async getAllTunggakanDaftarUlangFiltered(search = '', status = '') {
+        let query = 'SELECT * FROM tunggakan_daftar_ulang WHERE 1=1';
+        let params = [];
+
+        if (search) {
+            query += ' AND nama LIKE ?';
+            params.push(`%${search}%`);
+        }
+        
+        if (status) {
+            query += ' AND status = ?';
+            params.push(status);
+        }
+
+        query += ` ORDER BY id DESC`;
         
         const [rows] = await db.execute(query, params);
         return rows;

@@ -1,5 +1,6 @@
 const SantriModel = require('../../models/SantriModel');
 const TagihanModel = require('../../models/TagihanModel');
+const xlsx = require('xlsx');
 const TunggakanModel = require('../../models/TunggakanModel');
 const TransaksiModel = require('../../models/TransaksiModel');
 
@@ -65,6 +66,11 @@ exports.editSantri = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const updatedData = req.body;
+        
+        // Map the frontend form input name to the database schema
+        if (updatedData.tingkatPendidikan) {
+            updatedData.pendidikan = updatedData.tingkatPendidikan;
+        }
         
         const oldSantri = await SantriModel.getSantriById(id);
         if (!oldSantri) return res.status(404).send('Not Found');
@@ -249,6 +255,107 @@ exports.deleteSantriDaftarUlang = async (req, res) => {
             await TransaksiModel.deleteTransaksiAndLaporanByNamaAndPendidikan(santri.nama, santri.lanjutKe);
         }
         res.redirect('/santri-daftar-ulang');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.exportSantriExcel = async (req, res) => {
+    try {
+        const search = req.query.search || '';
+        const pendidikan = req.query.pendidikan || '';
+
+        const data = await SantriModel.getAllSantriFiltered(search, pendidikan);
+        
+        const worksheetData = data.map((item, index) => ({
+            'No': index + 1,
+            'No Pendaftaran': item.nomorPendaftaran,
+            'Tanggal Daftar (Timestamp)': item.timestamp,
+            'Email': item.email,
+            'Jalur Pendaftaran': item.jalurPendaftaran,
+            'Nama Lengkap': item.nama,
+            'Nama Panggilan': item.namaPanggilan,
+            'Jenis Kelamin': item.jenisKelamin,
+            'Pendidikan': item.pendidikan,
+            'Tempat Lahir': item.tempatLahir,
+            'Tanggal Lahir': item.tanggalLahir,
+            'Agama': item.agama,
+            'Status Keluarga': item.statusKeluarga,
+            'Anak Ke': item.anakKe,
+            'Dari Bersaudara': item.dariBersaudara,
+            'Asal Sekolah': item.asalSekolah,
+            'Usia': item.usia,
+            'Nama Ayah': item.namaAyah,
+            'Pekerjaan Ayah': item.pekerjaanAyah,
+            'No HP Ayah': item.teleponAyah,
+            'Nama Ibu': item.namaIbu,
+            'Pekerjaan Ibu': item.pekerjaanIbu,
+            'No HP Ibu': item.teleponIbu,
+            'Alamat Lengkap': item.alamat,
+            'No Telepon Pendaftar': item.noTelepon
+        }));
+
+        const worksheet = xlsx.utils.json_to_sheet(worksheetData);
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Data Santri Baru');
+
+        const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Disposition', 'attachment; filename="Detail_Data_Santri_Baru.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.exportSantriDaftarUlangExcel = async (req, res) => {
+    try {
+        const search = req.query.search || '';
+        const pendidikan = req.query.pendidikan || '';
+
+        const data = await SantriModel.getAllSantriDaftarUlangFiltered(search, pendidikan);
+        
+        const worksheetData = data.map((item, index) => ({
+            'No': index + 1,
+            'No Pendaftaran': item.nomorPendaftaran,
+            'Tanggal Daftar (Timestamp)': item.timestamp,
+            'Email': item.email,
+            'Jalur Pendaftaran': item.jalurPendaftaran,
+            'Nama Lengkap': item.nama,
+            'Nama Panggilan': item.namaPanggilan,
+            'Jenis Kelamin': item.jenisKelamin,
+            'Unit Sebelumnya': item.unitSebelumnya,
+            'Lanjut Ke': item.lanjutKe,
+            'Tempat Lahir': item.tempatLahir,
+            'Tanggal Lahir': item.tanggalLahir,
+            'Agama': item.agama,
+            'Status Keluarga': item.statusKeluarga,
+            'Anak Ke': item.anakKe,
+            'Dari Bersaudara': item.dariBersaudara,
+            'Asal Sekolah': item.asalSekolah,
+            'Usia': item.usia,
+            'Nama Ayah': item.namaAyah,
+            'Pekerjaan Ayah': item.pekerjaanAyah,
+            'No HP Ayah': item.teleponAyah,
+            'Nama Ibu': item.namaIbu,
+            'Pekerjaan Ibu': item.pekerjaanIbu,
+            'No HP Ibu': item.teleponIbu,
+            'Alamat Lengkap': item.alamat,
+            'No Telepon Pendaftar': item.noTelepon
+        }));
+
+        const worksheet = xlsx.utils.json_to_sheet(worksheetData);
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Data Santri Daftar Ulang');
+
+        const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Disposition', 'attachment; filename="Detail_Data_Santri_Daftar_Ulang.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');

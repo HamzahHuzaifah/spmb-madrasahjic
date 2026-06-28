@@ -27,9 +27,9 @@
             <button type="button" class="btn btn-info btn-preview-laporan" onclick="openModalLaporan()">
                 <i class="fas fa-eye"></i> Preview Laporan
             </button>
-            <button class="btn btn-secondary btn-print-laporan btn-print" onclick="window.print()">
-                <i class="fas fa-print"></i> Cetak / PDF
-            </button>
+            <a href="/laporan/export-excel?search=<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>&bulan=<%= typeof bulanQuery !== 'undefined' ? bulanQuery : '' %>&tahun=<%= typeof tahunQuery !== 'undefined' ? tahunQuery : '' %>" class="btn btn-secondary btn-print-laporan btn-print" style="text-decoration: none;" download>
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a>
         </div>
     </div>
 
@@ -122,33 +122,15 @@
         </table>
 
         <!-- Pagination UI -->
-        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 10px 0; border-top: 1px solid #eee;">
-                <div style="color: #666; font-size: 14px;">
-                    Menampilkan Halaman <strong><%= currentPage %></strong> dari <strong><%= totalPages %></strong> 
-                    (Total: <%= totalData %> Data)
-                </div>
-                <div style="display: flex; gap: 5px;">
-                    <% if (currentPage > 1) { %>
-                        <a href="?page=<%= currentPage - 1 %><%= typeof searchQuery !== 'undefined' && searchQuery ? '&search='+searchQuery : '' %><%= typeof bulanQuery !== 'undefined' && bulanQuery ? '&bulan='+bulanQuery : '' %><%= typeof tahunQuery !== 'undefined' && tahunQuery ? '&tahun='+tahunQuery : '' %>" class="btn btn-secondary" style="padding: 5px 12px; text-decoration: none;">&laquo; Prev</a>
-                    <% } %>
-
-                    <% 
-                    let startPage = Math.max(1, currentPage - 2);
-                    let endPage = Math.min(totalPages, currentPage + 2);
-                    for(let i = startPage; i <= endPage; i++) { 
-                    %>
-                        <a href="?page=<%= i %><%= typeof searchQuery !== 'undefined' && searchQuery ? '&search='+searchQuery : '' %><%= typeof bulanQuery !== 'undefined' && bulanQuery ? '&bulan='+bulanQuery : '' %><%= typeof tahunQuery !== 'undefined' && tahunQuery ? '&tahun='+tahunQuery : '' %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-secondary' %>" style="padding: 5px 12px; text-decoration: none;">
-                            <%= i %>
-                        </a>
-                    <% } %>
-
-                    <% if (currentPage < totalPages) { %>
-                        <a href="?page=<%= currentPage + 1 %><%= typeof searchQuery !== 'undefined' && searchQuery ? '&search='+searchQuery : '' %><%= typeof bulanQuery !== 'undefined' && bulanQuery ? '&bulan='+bulanQuery : '' %><%= typeof tahunQuery !== 'undefined' && tahunQuery ? '&tahun='+tahunQuery : '' %>" class="btn btn-secondary" style="padding: 5px 12px; text-decoration: none;">Next &raquo;</a>
-                    <% } %>
-                </div>
-            </div>
-        <% } %>
+        <%- include('partials/pagination', { 
+            currentPage: currentPage, 
+            totalPages: totalPages, 
+            totalData: totalData, 
+            baseUrl: '/laporan', 
+            queryParams: (typeof searchQuery !== 'undefined' && searchQuery ? '&search='+searchQuery : '') + 
+                         (typeof bulanQuery !== 'undefined' && bulanQuery ? '&bulan='+bulanQuery : '') + 
+                         (typeof tahunQuery !== 'undefined' && tahunQuery ? '&tahun='+tahunQuery : '')
+        }) %>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -166,54 +148,6 @@
         </div>
     </div>
 
-    <script>
-        function openModalLaporan() {
-            const filterBulan = document.getElementById("filterBulan").value;
-            const filterTahun = document.querySelector('input[name="tahun"]').value || new Date().getFullYear();
-            
-            if (!filterBulan) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Pemberitahuan',
-                    text: 'Silakan pilih Bulan terlebih dahulu untuk melihat preview laporan bulanan.',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3a7b5e'
-                });
-                return;
-            }
-
-            document.getElementById('laporanModal').style.display = 'flex';
-            document.getElementById('laporanIframe').src = '/laporan-bulanan?bulan=' + filterBulan + '&tahun=' + filterTahun;
-        }
-
-        function closeModalLaporan() {
-            document.getElementById('laporanModal').style.display = 'none';
-            document.getElementById('laporanIframe').src = '';
-        }
-
-        function filterData() {
-            var filterTahun = document.getElementById("filterTahun").value.toLowerCase();
-            var filterBulan = document.getElementById("filterBulan").value.toLowerCase();
-            var table = document.getElementById("tabelLaporan");
-            var tr = table.getElementsByTagName("tr");
-
-            for (var i = 1; i < tr.length; i++) {
-                var tdBulan = tr[i].getElementsByTagName("td")[2]; // Bulan dan Tahun is index 2
-                if (tdBulan) {
-                    var txtBulan = tdBulan.textContent || tdBulan.innerText;
-                    var txtLower = txtBulan.toLowerCase();
-
-                    var matchTahun = filterTahun === "" || txtLower.indexOf(filterTahun) > -1;
-                    var matchBulan = filterBulan === "" || txtLower.indexOf(filterBulan) > -1;
-
-                    if (matchTahun && matchBulan) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="/js/laporan.js"></script>
 
     <%- include('partials/footer') %>

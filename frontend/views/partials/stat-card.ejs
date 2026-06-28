@@ -1,0 +1,7 @@
+<div class="stat-card" style="height: 100%;">
+    <div class="stat-title"><%= title %></div>
+    <div class="stat-value" id="<%= id %>" data-original="<%= rawValue %>">
+        <%= formattedValue %>
+    </div>
+    <i class="<%= iconClass %> stat-icon" <%- typeof iconStyle !== 'undefined' ? 'style="' + iconStyle + '"' : '' %>></i>
+</div>

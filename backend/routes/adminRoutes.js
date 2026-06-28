@@ -22,23 +22,31 @@ router.get('/logout', authController.getLogout);
 router.use(cekAuth);
 
 // Dashboard
+router.get('/dashboard/export-excel', dashboardController.exportDashboardExcel);
 router.get('/dashboard', dashboardController.getDashboard);
 
 // Laporan
+router.get('/laporan/export-excel', laporanController.exportLaporanExcel);
 router.get('/laporan', laporanController.getLaporan);
 router.get('/laporan-bulanan', laporanController.getLaporanBulanan);
 
 // Tagihan
+router.get('/tagihan/export-excel', tagihanController.exportTagihanExcel);
+router.get('/tagihan-daftar-ulang/export-excel', tagihanController.exportTagihanDaftarUlangExcel);
 router.get('/tagihan', tagihanController.getTagihan);
 router.get('/tagihan-daftar-ulang', tagihanController.getTagihanDaftarUlang);
 router.post('/tagihan/edit/:id', tagihanController.editTagihan);
 router.post('/tagihan-daftar-ulang/edit/:id', tagihanController.editTagihanDaftarUlang);
 
 // Tunggakan
+router.get('/tunggakan/export-excel', tunggakanController.exportTunggakanExcel);
+router.get('/tunggakan-daftar-ulang/export-excel', tunggakanController.exportTunggakanDaftarUlangExcel);
 router.get('/tunggakan', tunggakanController.getTunggakan);
 router.get('/tunggakan-daftar-ulang', tunggakanController.getTunggakanDaftarUlang);
 
 // Santri
+router.get('/santri/export-excel', santriController.exportSantriExcel);
+router.get('/santri-daftar-ulang/export-excel', santriController.exportSantriDaftarUlangExcel);
 router.get('/santri', santriController.getSantri);
 router.get('/santri-daftar-ulang', santriController.getSantriDaftarUlang);
 router.post('/santri/edit/:id', santriController.editSantri);
@@ -47,6 +55,7 @@ router.post('/santri/delete/:id', santriController.deleteSantri);
 router.post('/santri-daftar-ulang/delete/:id', santriController.deleteSantriDaftarUlang);
 
 // Input Transaksi
+router.get('/input-transaksi/export-excel', transaksiController.exportTransaksiExcel);
 router.get('/input-transaksi', transaksiController.getInputTransaksi);
 router.post('/input-transaksi', transaksiController.postInputTransaksi);
 router.post('/input-transaksi/edit/:id', transaksiController.editTransaksi);

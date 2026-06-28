@@ -20,37 +20,43 @@
             </div>
             <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
             <a href="/dashboard" class="btn btn-secondary" style="text-decoration: none;"><i class="fas fa-sync"></i> Reset</a>
+            
+            <a href="/dashboard/export-excel?startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>" class="btn btn-secondary btn-print" style="text-decoration: none; margin-left: auto;" download>
+                <i class="fas fa-file-excel"></i> Export Excel
+            </a>
         </form>
     </div>
 
     <!-- Top Stats -->
     <div class="row mb-4">
         <div class="col-md-4 mb-4">
-            <div class="stat-card" style="height: 100%;">
-                <div class="stat-title">PENDAPATAN (Berdasarkan Tanggal)</div>
-                <div class="stat-value" id="valPendapatan" data-original="<%= dashboardStats.totalPemasukanGlobal %>">
-                    Rp <%= dashboardStats.totalPemasukanGlobal.toLocaleString('id-ID') %>
-                </div>
-                <i class="fas fa-wallet stat-icon"></i>
-            </div>
+            <%- include('partials/stat-card', {
+                title: 'PENDAPATAN (Berdasarkan Tanggal)',
+                id: 'valPendapatan',
+                rawValue: dashboardStats.totalPemasukanGlobal,
+                formattedValue: 'Rp ' + dashboardStats.totalPemasukanGlobal.toLocaleString('id-ID'),
+                iconClass: 'fas fa-wallet'
+            }) %>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="stat-card" style="height: 100%;">
-                <div class="stat-title">TUNGGAKAN</div>
-                <div class="stat-value" id="valTopTunggakan" data-original="<%= dashboardStats.totalTunggakan %>">
-                    Rp <%= dashboardStats.totalTunggakan.toLocaleString('id-ID') %>
-                </div>
-                <i class="fas fa-file-invoice-dollar stat-icon" style="color: rgba(239, 68, 68, 0.1);"></i>
-            </div>
+            <%- include('partials/stat-card', {
+                title: 'TUNGGAKAN',
+                id: 'valTopTunggakan',
+                rawValue: dashboardStats.totalTunggakan,
+                formattedValue: 'Rp ' + dashboardStats.totalTunggakan.toLocaleString('id-ID'),
+                iconClass: 'fas fa-file-invoice-dollar',
+                iconStyle: 'color: rgba(239, 68, 68, 0.1);'
+            }) %>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="stat-card" style="height: 100%;">
-                <div class="stat-title">TARGET PENDAPATAN</div>
-                <div class="stat-value" id="valTopTarget" data-original="<%= dashboardStats.totalTargetPendapatan %>">
-                    Rp <%= dashboardStats.totalTargetPendapatan.toLocaleString('id-ID') %>
-                </div>
-                <i class="fas fa-bullseye stat-icon" style="color: rgba(217, 119, 6, 0.1);"></i>
-            </div>
+            <%- include('partials/stat-card', {
+                title: 'TARGET PENDAPATAN',
+                id: 'valTopTarget',
+                rawValue: dashboardStats.totalTargetPendapatan,
+                formattedValue: 'Rp ' + dashboardStats.totalTargetPendapatan.toLocaleString('id-ID'),
+                iconClass: 'fas fa-bullseye',
+                iconStyle: 'color: rgba(217, 119, 6, 0.1);'
+            }) %>
         </div>
     </div>
 
@@ -366,25 +372,15 @@
             </table>
         </div>
 
-        <!-- Pagination Controls -->
-        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
-            <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; gap: 5px;">
-                <% if (currentPage > 1) { %>
-                    <a href="?page=<%= currentPage - 1 %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>" class="btn btn-secondary" style="padding: 5px 10px;">&laquo; Prev</a>
-                <% } %>
-                
-                <% for(let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) { %>
-                    <a href="?page=<%= i %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>" class="btn <%= currentPage === i ? 'btn-primary' : 'btn-secondary' %>" style="padding: 5px 10px;"><%= i %></a>
-                <% } %>
-                
-                <% if (currentPage < totalPages) { %>
-                    <a href="?page=<%= currentPage + 1 %>&startDate=<%= typeof startDateQuery !== 'undefined' ? startDateQuery : '' %>&endDate=<%= typeof endDateQuery !== 'undefined' ? endDateQuery : '' %>" class="btn btn-secondary" style="padding: 5px 10px;">Next &raquo;</a>
-                <% } %>
-            </div>
-            <div style="text-align: center; margin-top: 10px; color: #64748b; font-size: 14px;">
-                Menampilkan halaman <%= currentPage %> dari <%= totalPages %> (Total: <%= totalData %> data)
-            </div>
-        <% } %>
+        <!-- Pagination UI -->
+        <%- include('partials/pagination', { 
+            currentPage: currentPage, 
+            totalPages: totalPages, 
+            totalData: totalData, 
+            baseUrl: '/dashboard', 
+            queryParams: (typeof startDateQuery !== 'undefined' && startDateQuery ? '&startDate='+startDateQuery : '') + 
+                         (typeof endDateQuery !== 'undefined' && endDateQuery ? '&endDate='+endDateQuery : '')
+        }) %>
     </div>
 
 </div> <!-- end content-area -->

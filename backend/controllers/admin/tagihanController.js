@@ -1,5 +1,6 @@
 const TagihanModel = require('../../models/TagihanModel');
 const TunggakanModel = require('../../models/TunggakanModel');
+const xlsx = require('xlsx');
 
 exports.getTagihan = async (req, res) => {
     try {
@@ -133,6 +134,77 @@ exports.editTagihanDaftarUlang = async (req, res) => {
             }
         }
         res.json({ success: true, message: 'Tagihan berhasil diperbarui!' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.exportTagihanExcel = async (req, res) => {
+    try {
+        const search = req.query.search || '';
+        const pendidikan = req.query.pendidikan || '';
+
+        const data = await TagihanModel.getAllTagihanFiltered(search, pendidikan);
+        
+        const worksheetData = data.map((item, index) => ({
+            'No': index + 1,
+            'Nama Santri': item.nama,
+            'Jalur': item.jalur,
+            'Pendidikan': item.satuanPendidikan,
+            'Formulir': item.formulir,
+            'Uang Pangkal': item.uangPangkal,
+            'Perlengkapan': item.perlengkapan,
+            'Seragam': item.seragam,
+            'SPP': item.spp,
+            'Total Tagihan': item.totalTagihan
+        }));
+
+        const worksheet = xlsx.utils.json_to_sheet(worksheetData);
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Tagihan Baru');
+
+        const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Disposition', 'attachment; filename="Data_Tagihan_Baru.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+};
+
+exports.exportTagihanDaftarUlangExcel = async (req, res) => {
+    try {
+        const search = req.query.search || '';
+        const pendidikan = req.query.pendidikan || '';
+
+        const data = await TagihanModel.getAllTagihanDaftarUlangFiltered(search, pendidikan);
+        
+        const worksheetData = data.map((item, index) => ({
+            'No': index + 1,
+            'Nama Santri': item.nama,
+            'Jalur': item.jalur,
+            'Pendidikan Sebelumnya': item.satuanPendidikanSebelumnya,
+            'Pendidikan Lanjutan': item.satuanPendidikan,
+            'Formulir': item.formulir,
+            'Uang Pangkal': item.uangPangkal,
+            'Perlengkapan': item.perlengkapan,
+            'Seragam': item.seragam,
+            'SPP': item.spp,
+            'Total Tagihan': item.totalTagihan
+        }));
+
+        const worksheet = xlsx.utils.json_to_sheet(worksheetData);
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Tagihan Daftar Ulang');
+
+        const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Disposition', 'attachment; filename="Data_Tagihan_Daftar_Ulang.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
